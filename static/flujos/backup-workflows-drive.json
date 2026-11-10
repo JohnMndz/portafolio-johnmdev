@@ -1,0 +1,506 @@
+{
+  "nodes": [
+    {
+      "id": "ebd92d84-b966-4bfa-a4ff-f2a9ceefe554",
+      "name": "Daily Backup Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        1424,
+        960
+      ]
+    },
+    {
+      "id": "11712696-06b8-4178-9ee3-4b4262db1c0a",
+      "name": "Set Configuration",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1648,
+        960
+      ]
+    },
+    {
+      "id": "c63397f9-3b4c-4088-a993-dd60adb62a1a",
+      "name": "Get All n8n Workflows",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        2096,
+        960
+      ]
+    },
+    {
+      "id": "b6a68ddc-705f-4573-9804-db605029971c",
+      "name": "Prepare Workflow",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3440,
+        384
+      ]
+    },
+    {
+      "id": "5b326356-f882-44bd-a5d8-6c9e3d7882e8",
+      "name": "Workflow Exists?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        4112,
+        384
+      ]
+    },
+    {
+      "id": "a67ede3d-78f1-419d-b47d-3544dbba7293",
+      "name": "Hash Changed?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        4336,
+        304
+      ]
+    },
+    {
+      "id": "45c5efe9-9089-40ff-87cc-9845c0c200da",
+      "name": "Upload New Workflow Backup",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4784,
+        384
+      ]
+    },
+    {
+      "id": "c8e0a6cc-c90c-444b-8173-b72039b985ea",
+      "name": "Upsert Workflow Records",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        5008,
+        640
+      ]
+    },
+    {
+      "id": "7e03ef3c-8e9a-4514-86cc-82a7a4165cde",
+      "name": "Split Workflows",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        2320,
+        960
+      ]
+    },
+    {
+      "id": "c86be3d0-0c07-4794-a6bd-1efb66c40735",
+      "name": "Process Each Workflow",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2544,
+        960
+      ]
+    },
+    {
+      "id": "f32d1873-b3e2-4183-b605-90e8f3f7f471",
+      "name": "Generate Workflow Hash",
+      "type": "n8n-nodes-base.crypto",
+      "typeVersion": 1,
+      "position": [
+        3664,
+        384
+      ]
+    },
+    {
+      "id": "6bc23764-238d-4c8a-a012-ea0a42e87392",
+      "name": "Lookup Workflow in Data Table",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        3888,
+        384
+      ]
+    },
+    {
+      "id": "466ec2da-b1f0-4323-9824-770a6e03a43c",
+      "name": "Delete Existing Workflow Backup",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        4560,
+        304
+      ]
+    },
+    {
+      "id": "fdeefcbb-e0d6-434d-8dd4-6dc4736ecfee",
+      "name": "Backup scope all?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2768,
+        400
+      ]
+    },
+    {
+      "id": "0f65dabf-87ed-4a2c-a775-93f9d60299a2",
+      "name": "Backup scope active?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2992,
+        480
+      ]
+    },
+    {
+      "id": "04a1cd2b-3ce7-492f-b9a6-1b055633f0b8",
+      "name": "If workflow active?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3216,
+        384
+      ]
+    },
+    {
+      "id": "92a1f1f7-89f0-483c-a78d-84a31f375f43",
+      "name": "Backup scope tagged?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3216,
+        576
+      ]
+    },
+    {
+      "id": "614962bc-f77a-470d-9668-0a2a690c2f31",
+      "name": "Config Validation",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1872,
+        960
+      ]
+    },
+    {
+      "id": "3facf771-8c4a-4179-a2de-056c53113be7",
+      "name": "Get All Backups from Table",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        2768,
+        768
+      ]
+    },
+    {
+      "id": "e5287963-b402-4a77-9075-0ec74854b2d8",
+      "name": "Filter Deleted Workflows",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2992,
+        768
+      ]
+    },
+    {
+      "id": "50026b9c-e98f-465a-b181-6eac8f583dfa",
+      "name": "Delete Removed Backup from Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        3216,
+        768
+      ]
+    },
+    {
+      "id": "3115ca53-3419-46d9-89bf-573965fbf704",
+      "name": "Delete Record from Data Table",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        3440,
+        768
+      ]
+    }
+  ],
+  "connections": {
+    "Hash Changed?": {
+      "main": [
+        [
+          {
+            "node": "Delete Existing Workflow Backup",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Each Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Workflows": {
+      "main": [
+        [
+          {
+            "node": "Process Each Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Workflow": {
+      "main": [
+        [
+          {
+            "node": "Generate Workflow Hash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Workflow Exists?": {
+      "main": [
+        [
+          {
+            "node": "Hash Changed?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload New Workflow Backup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup scope all?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Backup scope active?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Validation": {
+      "main": [
+        [
+          {
+            "node": "Get All n8n Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Configuration": {
+      "main": [
+        [
+          {
+            "node": "Config Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If workflow active?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Each Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup scope active?": {
+      "main": [
+        [
+          {
+            "node": "If workflow active?",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Backup scope tagged?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup scope tagged?": {
+      "main": [
+        [
+          {
+            "node": "Prepare Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Process Each Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Daily Backup Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All n8n Workflows": {
+      "main": [
+        [
+          {
+            "node": "Split Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process Each Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get All Backups from Table",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Backup scope all?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Workflow Hash": {
+      "main": [
+        [
+          {
+            "node": "Lookup Workflow in Data Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upsert Workflow Records": {
+      "main": [
+        [
+          {
+            "node": "Process Each Workflow",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload New Workflow Backup": {
+      "main": [
+        [
+          {
+            "node": "Upsert Workflow Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Workflow in Data Table": {
+      "main": [
+        [
+          {
+            "node": "Workflow Exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Existing Workflow Backup": {
+      "main": [
+        [
+          {
+            "node": "Upload New Workflow Backup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Backups from Table": {
+      "main": [
+        [
+          {
+            "node": "Filter Deleted Workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Deleted Workflows": {
+      "main": [
+        [
+          {
+            "node": "Delete Removed Backup from Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Removed Backup from Drive": {
+      "main": [
+        [
+          {
+            "node": "Delete Record from Data Table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

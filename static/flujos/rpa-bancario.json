@@ -1,0 +1,749 @@
+{
+  "nodes": [
+    {
+      "id": "500b4d5b-f3fd-480d-822e-aada6d327b82",
+      "name": "Recibir Evento de Evolution",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -240
+      ]
+    },
+    {
+      "id": "b8fe5684-6612-402a-b5b4-00db207175e5",
+      "name": "Normalizar Mensaje de Evolution",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -240
+      ]
+    },
+    {
+      "id": "c3c5e838-7283-45ea-8803-97feea9038b5",
+      "name": "Es Mensaje Util del Bot?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        -240
+      ]
+    },
+    {
+      "id": "2f4eebdb-1676-4fb7-a492-f9dfae2b57f4",
+      "name": "Leer Sesion Activa",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        -240
+      ]
+    },
+    {
+      "id": "d376afda-f1ec-49a8-863e-26c767a1325f",
+      "name": "Decidir Siguiente Paso",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1472,
+        -240
+      ]
+    },
+    {
+      "id": "32cf2a25-dbdc-405d-b067-39f4a5fe5132",
+      "name": "Enrutar Accion",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1920,
+        -272
+      ]
+    },
+    {
+      "id": "5a7903a0-4f54-4a34-9e81-bb63de326d26",
+      "name": "Pausa Antes de Responder",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2144,
+        -528
+      ]
+    },
+    {
+      "id": "86cbc8ec-2dbf-4e82-b0e7-aba968ac2fa7",
+      "name": "Responder al Bot del Banco",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2368,
+        -528
+      ]
+    },
+    {
+      "id": "9903257f-3642-4d9d-b9e2-b7c1cfbdec7b",
+      "name": "Guardar Paso Actual",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1696,
+        -240
+      ]
+    },
+    {
+      "id": "ce1f5d5b-1ea7-447a-b971-6c347d3ab7c9",
+      "name": "Generar Intentos de Sondeo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2144,
+        -144
+      ]
+    },
+    {
+      "id": "ec1f4dd8-d90b-4ae1-987a-90287b5971b9",
+      "name": "Marcar Sesion Fallida",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2592,
+        -336
+      ]
+    },
+    {
+      "id": "9db99ae0-8c12-483e-9eff-3fa8419735ed",
+      "name": "Esperar Llegada del Correo",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2592,
+        -144
+      ]
+    },
+    {
+      "id": "a121ea99-8dc1-4d1a-85d0-10ded33a0a67",
+      "name": "Buscar Correo del Banco",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2816,
+        -144
+      ]
+    },
+    {
+      "id": "7336bf79-1810-40da-be33-1e73b8f1dcf3",
+      "name": "Extraer OTP del Correo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3040,
+        -144
+      ]
+    },
+    {
+      "id": "b0993d61-a363-4100-9129-fbfe7b062047",
+      "name": "Se Encontro el OTP?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3264,
+        -64
+      ]
+    },
+    {
+      "id": "730d0b05-666e-40ed-a229-444717ccee0a",
+      "name": "Enviar OTP al Bot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        3488,
+        -64
+      ]
+    },
+    {
+      "id": "7b7de9a8-4f8a-4bfc-b1ca-62b366bc45ab",
+      "name": "Guardar OTP Enviado",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        3712,
+        -64
+      ]
+    },
+    {
+      "id": "85dac2ab-b02f-4178-a3dc-0fbe1173d5b2",
+      "name": "Sondear Bandeja de Entrada",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        2368,
+        -144
+      ]
+    },
+    {
+      "id": "69b00e6e-6efd-45a3-b6e7-e654faa07438",
+      "name": "Cerrar Sesion Completada",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2144,
+        144
+      ]
+    },
+    {
+      "id": "599b443b-0270-4ad9-991d-aa4afdc87b00",
+      "name": "Recibir Comando en Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        -752
+      ]
+    },
+    {
+      "id": "d5f3ec97-8700-4723-adbd-96e8cecc443a",
+      "name": "Validar y Configurar Sesion",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        -848
+      ]
+    },
+    {
+      "id": "5d8b1fa7-cb03-4513-a9bf-172f76b016cd",
+      "name": "Es Solicitud Valida?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        672,
+        -848
+      ]
+    },
+    {
+      "id": "fa1c3817-d0d9-4376-a2fc-95be742fa705",
+      "name": "Abrir Sesion en Tabla",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1344,
+        -848
+      ]
+    },
+    {
+      "id": "722c5cdb-4171-4d34-8e3b-b675a96a2834",
+      "name": "Saludar al Bot del Banco",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1568,
+        -848
+      ]
+    },
+    {
+      "id": "3a572c56-104b-433b-9f6b-ae227fa3e40e",
+      "name": "Marcar Sesion Expirada",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2464,
+        -848
+      ]
+    },
+    {
+      "id": "7b80b380-4204-4e0d-a7f3-abd64be38f4b",
+      "name": "Configuracion",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        -848
+      ]
+    },
+    {
+      "id": "94f5d942-9346-4854-a697-ba5e0953778b",
+      "name": "Esperar Ventana de Sesion",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1792,
+        -848
+      ]
+    },
+    {
+      "id": "9345edfb-7087-48dd-8ba5-697f52361e9a",
+      "name": "Releer Sesion",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        2016,
+        -848
+      ]
+    },
+    {
+      "id": "220e57fe-36e9-45df-8aed-de257c9d053b",
+      "name": "Sigue Activa?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2240,
+        -848
+      ]
+    },
+    {
+      "id": "063765af-4854-487d-9d9f-6dd53a35549e",
+      "name": "Es de Esta Sesion?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        896,
+        -240
+      ]
+    },
+    {
+      "id": "9c41f72b-81e4-4c6a-9a21-55f2e910dc01",
+      "name": "Analizar Mensaje con Gemini",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        1120,
+        -240
+      ]
+    },
+    {
+      "id": "b1c48d22-9101-4a10-8a11-000000000101",
+      "name": "Recibir Disparo de Studio",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -944
+      ]
+    },
+    {
+      "id": "b1c48d22-9101-4a10-8a11-000000000102",
+      "name": "Verificar Sesion en Curso",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        -848
+      ]
+    },
+    {
+      "id": "b1c48d22-9101-4a10-8a11-000000000103",
+      "name": "No Hay Sesion Activa?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1120,
+        -848
+      ]
+    },
+    {
+      "id": "b1c48d22-9101-4a10-8a11-000000000104",
+      "name": "Extraer Saldo y Fecha",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2368,
+        144
+      ]
+    },
+    {
+      "id": "b1c48d22-9101-4a10-8a11-000000000105",
+      "name": "Actualizar Saldo en Tablero",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2592,
+        144
+      ]
+    }
+  ],
+  "connections": {
+    "Recibir Evento de Evolution": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Mensaje de Evolution",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar Mensaje de Evolution": {
+      "main": [
+        [
+          {
+            "node": "Es Mensaje Util del Bot?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es Mensaje Util del Bot?": {
+      "main": [
+        [
+          {
+            "node": "Leer Sesion Activa",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrutar Accion": {
+      "main": [
+        [
+          {
+            "node": "Pausa Antes de Responder",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generar Intentos de Sondeo",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cerrar Sesion Completada",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar Sesion Fallida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pausa Antes de Responder": {
+      "main": [
+        [
+          {
+            "node": "Responder al Bot del Banco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Intentos de Sondeo": {
+      "main": [
+        [
+          {
+            "node": "Sondear Bandeja de Entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar Llegada del Correo": {
+      "main": [
+        [
+          {
+            "node": "Buscar Correo del Banco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Correo del Banco": {
+      "main": [
+        [
+          {
+            "node": "Extraer OTP del Correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer OTP del Correo": {
+      "main": [
+        [
+          {
+            "node": "Se Encontro el OTP?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Se Encontro el OTP?": {
+      "main": [
+        [
+          {
+            "node": "Enviar OTP al Bot",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sondear Bandeja de Entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar OTP al Bot": {
+      "main": [
+        [
+          {
+            "node": "Guardar OTP Enviado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar y Configurar Sesion": {
+      "main": [
+        [
+          {
+            "node": "Es Solicitud Valida?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Abrir Sesion en Tabla": {
+      "main": [
+        [
+          {
+            "node": "Saludar al Bot del Banco",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar Ventana de Sesion": {
+      "main": [
+        [
+          {
+            "node": "Releer Sesion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Releer Sesion": {
+      "main": [
+        [
+          {
+            "node": "Sigue Activa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recibir Comando en Telegram": {
+      "main": [
+        [
+          {
+            "node": "Configuracion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Configuracion": {
+      "main": [
+        [
+          {
+            "node": "Validar y Configurar Sesion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Sesion Activa": {
+      "main": [
+        [
+          {
+            "node": "Es de Esta Sesion?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sondear Bandeja de Entrada": {
+      "main": [
+        [
+          {
+            "node": "Marcar Sesion Fallida",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Esperar Llegada del Correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es de Esta Sesion?": {
+      "main": [
+        [
+          {
+            "node": "Analizar Mensaje con Gemini",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analizar Mensaje con Gemini": {
+      "main": [
+        [
+          {
+            "node": "Decidir Siguiente Paso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decidir Siguiente Paso": {
+      "main": [
+        [
+          {
+            "node": "Guardar Paso Actual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Paso Actual": {
+      "main": [
+        [
+          {
+            "node": "Enrutar Accion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recibir Disparo de Studio": {
+      "main": [
+        [
+          {
+            "node": "Configuracion",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Configuracion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Es Solicitud Valida?": {
+      "main": [
+        [
+          {
+            "node": "Verificar Sesion en Curso",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Verificar Sesion en Curso": {
+      "main": [
+        [
+          {
+            "node": "No Hay Sesion Activa?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "No Hay Sesion Activa?": {
+      "main": [
+        [
+          {
+            "node": "Abrir Sesion en Tabla",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Saludar al Bot del Banco": {
+      "main": [
+        [
+          {
+            "node": "Esperar Ventana de Sesion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sigue Activa?": {
+      "main": [
+        [
+          {
+            "node": "Marcar Sesion Expirada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cerrar Sesion Completada": {
+      "main": [
+        [
+          {
+            "node": "Extraer Saldo y Fecha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraer Saldo y Fecha": {
+      "main": [
+        [
+          {
+            "node": "Actualizar Saldo en Tablero",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "nodes": [
+    {
+      "id": "6ca49c7e-b63a-4e99-b447-12ef80a32334",
+      "name": "Cada 5 minutos",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        -400
+      ]
+    },
+    {
+      "id": "904b8aa8-778b-458a-9b60-a564ab8a61df",
+      "name": "Consultar historial Cloud Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16,
+        -400
+      ]
+    },
+    {
+      "id": "c2dc18a3-23cc-43cf-abc4-215f484cfe50",
+      "name": "Detectar CX33 en NBG1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -400
+      ]
+    },
+    {
+      "id": "d2371804-ee38-402e-afdf-ccbb7de392a9",
+      "name": "Enviar alerta Telegram CX33",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        -400
+      ]
+    },
+    {
+      "id": "02b7e859-4aee-4500-9ca2-b2630719b128",
+      "name": "Trigger aprobacion Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        -80
+      ]
+    },
+    {
+      "id": "4f3dcf7b-28de-4121-a018-b7ac080f3319",
+      "name": "Validar aprobacion CX33",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        16,
+        -80
+      ]
+    },
+    {
+      "id": "5ecdec3b-2be2-41c2-a983-96f400f5a3ba",
+      "name": "Confirmar aprobacion Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        -176
+      ]
+    },
+    {
+      "id": "2ec15697-c9f0-4aa1-96f7-4cea72670360",
+      "name": "Ejecutar rescale Hetzner CX33",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        688,
+        -176
+      ]
+    },
+    {
+      "id": "68864342-bda1-43a3-adbd-3129b24f00f0",
+      "name": "Decidir accion rescale",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -80
+      ]
+    },
+    {
+      "id": "a53bb3dd-eea0-4266-948d-b659818013dd",
+      "name": "Confirmar rechazo Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        16
+      ]
+    }
+  ],
+  "connections": {
+    "Cada 5 minutos": {
+      "main": [
+        [
+          {
+            "node": "Consultar historial Cloud Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar historial Cloud Status": {
+      "main": [
+        [
+          {
+            "node": "Detectar CX33 en NBG1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detectar CX33 en NBG1": {
+      "main": [
+        [
+          {
+            "node": "Enviar alerta Telegram CX33",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Trigger aprobacion Telegram": {
+      "main": [
+        [
+          {
+            "node": "Validar aprobacion CX33",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar aprobacion CX33": {
+      "main": [
+        [
+          {
+            "node": "Decidir accion rescale",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Confirmar aprobacion Telegram": {
+      "main": [
+        [
+          {
+            "node": "Ejecutar rescale Hetzner CX33",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Decidir accion rescale": {
+      "main": [
+        [
+          {
+            "node": "Confirmar aprobacion Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Confirmar rechazo Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

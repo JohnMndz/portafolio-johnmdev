@@ -1,0 +1,380 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ */
+/* Tokens — portafolio John Mendoza                                    */
+/* Paleta: negros fríos + acento lima eléctrico y un cian de apoyo     */
+/* que solo aparece en degradados y halos.                             */
+/* ------------------------------------------------------------------ */
+
+@theme {
+	/* Superficies */
+	--color-fondo: #060709;
+	--color-superficie: #0b0c0f;
+	--color-elevado: #121318;
+	--color-borde: #1d1f26;
+	--color-borde-fuerte: #2c2f38;
+
+	/* Tinta */
+	--color-tinta: #f4f5f7;
+	--color-tinta-suave: #9aa0ac;
+	--color-tinta-tenue: #5d6370;
+
+	/* Acento lima */
+	--color-acento-200: #efffc2;
+	--color-acento-300: #ddff85;
+	--color-acento-400: #c8f550;
+	--color-acento-500: #a6d32f;
+	--color-acento-600: #789c1d;
+	--color-acento-900: #222d09;
+
+	/* Apoyo para degradados */
+	--color-cian-400: #4fe3d0;
+	--color-violeta-400: #8b7bff;
+
+	--font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-display: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+	--font-mono: 'Geist Mono Variable', ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+	--ease-salida: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+
+html {
+	scrollbar-gutter: stable;
+	scroll-behavior: smooth;
+	color-scheme: dark;
+}
+
+body {
+	@apply bg-fondo text-tinta antialiased;
+	font-feature-settings: 'ss01', 'cv11';
+	text-rendering: optimizeLegibility;
+}
+
+:focus-visible {
+	@apply outline-2 outline-offset-2 outline-acento-400;
+}
+
+button:not(:disabled) {
+	cursor: pointer;
+}
+
+::selection {
+	@apply bg-acento-400 text-fondo;
+}
+
+/* Las clases propias van en la capa `components`: así cualquier utilidad de Tailwind
+   puesta en el mismo elemento (posición, fondo, z-index…) gana sin `!important`. */
+@layer components {
+	/* ------------------------------------------------------------------ */
+	/* Tipografía                                                          */
+	/* ------------------------------------------------------------------ */
+
+	/* Palabra de acento en serif cursiva, dentro de titulares en grotesca. */
+	.serif-acento {
+		font-family: var(--font-serif);
+		font-style: italic;
+		font-weight: 400;
+		letter-spacing: -0.01em;
+	}
+
+	.texto-degradado {
+		background-image: linear-gradient(
+			100deg,
+			var(--color-acento-300) 0%,
+			var(--color-acento-400) 35%,
+			var(--color-cian-400) 100%
+		);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
+	.tinta-degradada {
+		background-image: linear-gradient(180deg, #fff 0%, #fff 40%, var(--color-tinta-tenue) 140%);
+		-webkit-background-clip: text;
+		background-clip: text;
+		color: transparent;
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* Superficies                                                         */
+	/* ------------------------------------------------------------------ */
+
+	/* Grano sutil: rompe el bandeado de los degradados en pantallas OLED. */
+	.grano::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		pointer-events: none;
+		opacity: 0.05;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+	}
+
+	/* Retícula punteada estilo canvas de n8n. */
+	.reticula {
+		background-image: radial-gradient(var(--color-borde-fuerte) 1px, transparent 1px);
+		background-size: 22px 22px;
+	}
+
+	/* Vidrio: tarjetas y barras flotantes sobre el fondo animado. Sin `backdrop-filter`:
+	   el fondo cambia en cada cuadro del scroll y cada elemento con desenfoque tendría
+	   que volver a desenfocar lo que tiene detrás (la marquesina llegaba a decenas a la
+	   vez). Una superficie algo más opaca da casi el mismo aspecto a coste cero. */
+	.vidrio {
+		background: color-mix(in oklab, var(--color-superficie) 86%, transparent);
+	}
+
+	/* Desenfoque real, solo para la barra de navegación: es un único elemento y es
+	   donde el texto de detrás más estorbaría. */
+	.vidrio-desenfoque {
+		background: color-mix(in oklab, var(--color-superficie) 72%, transparent);
+		backdrop-filter: blur(14px) saturate(140%);
+		-webkit-backdrop-filter: blur(14px) saturate(140%);
+	}
+
+	/* Brillo interior en el borde superior: da volumen sin sombras pesadas. */
+	.brillo-superior {
+		box-shadow:
+			inset 0 1px 0 0 rgb(255 255 255 / 0.06),
+			0 1px 2px rgb(0 0 0 / 0.4);
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* Spotlight: borde y halo que siguen al cursor (ver acciones/foco.ts) */
+	/* ------------------------------------------------------------------ */
+
+	.foco {
+		position: relative;
+		isolation: isolate;
+	}
+
+	.foco::before,
+	.foco::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 400ms var(--ease-salida);
+	}
+
+	/* Borde iluminado: un degradado radial recortado al anillo de 1px. */
+	.foco::before {
+		z-index: 3;
+		padding: 1px;
+		background: radial-gradient(
+			340px circle at var(--mx, 50%) var(--my, 50%),
+			color-mix(in oklab, var(--color-acento-400) 75%, transparent),
+			transparent 45%
+		);
+		-webkit-mask:
+			linear-gradient(#000 0 0) content-box,
+			linear-gradient(#000 0 0);
+		-webkit-mask-composite: xor;
+		mask:
+			linear-gradient(#000 0 0) content-box exclude,
+			linear-gradient(#000 0 0);
+	}
+
+	/* Halo interior muy tenue. Con `isolation` en el padre, un z-index negativo pinta
+   sobre el fondo de la tarjeta pero por debajo de todo su contenido. */
+	.foco::after {
+		z-index: -1;
+		background: radial-gradient(
+			520px circle at var(--mx, 50%) var(--my, 50%),
+			color-mix(in oklab, var(--color-acento-400) 7%, transparent),
+			transparent 50%
+		);
+	}
+
+	.foco:hover::before,
+	.foco:hover::after,
+	.foco:focus-visible::before,
+	.foco:focus-visible::after {
+		opacity: 1;
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* Revelado al entrar en viewport                                      */
+	/* El estado oculto cuelga de `.js`, que añade un script inline en     */
+	/* <head>: sin JavaScript el contenido se ve completo.                 */
+	/* ------------------------------------------------------------------ */
+
+	/* Solo opacidad y transform (los compone la GPU): animar `filter: blur()` en cada
+	   bloque que entra mientras se hace scroll restaba cuadros justo en ese momento. */
+	.revelar {
+		transition:
+			opacity 900ms var(--ease-salida),
+			transform 900ms var(--ease-salida);
+	}
+
+	.js .revelar-oculto {
+		opacity: 0;
+		transform: translateY(1.75rem) scale(0.985);
+	}
+
+	/* Entrada al cargar (portada): no depende de JS, solo de CSS. */
+	@keyframes entrar {
+		from {
+			opacity: 0;
+			transform: translateY(0.6em);
+			filter: blur(12px);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+			filter: blur(0);
+		}
+	}
+
+	.entrar {
+		animation: entrar 1100ms var(--ease-salida) both;
+		animation-delay: var(--d, 0ms);
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* Marquesina                                                          */
+	/* ------------------------------------------------------------------ */
+
+	@keyframes marquesina {
+		to {
+			transform: translateX(calc(-50% - var(--hueco, 0.75rem) / 2));
+		}
+	}
+
+	.marquesina {
+		mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+	}
+
+	.marquesina-pista {
+		display: flex;
+		width: max-content;
+		gap: var(--hueco, 0.75rem);
+		animation: marquesina var(--duracion, 40s) linear infinite;
+	}
+
+	.marquesina-pista.inversa {
+		animation-direction: reverse;
+	}
+
+	.marquesina:hover .marquesina-pista {
+		animation-play-state: paused;
+	}
+
+	/* ------------------------------------------------------------------ */
+	/* Varios                                                              */
+	/* ------------------------------------------------------------------ */
+
+	@keyframes latido {
+		0% {
+			transform: scale(1);
+			opacity: 0.7;
+		}
+		100% {
+			transform: scale(2.6);
+			opacity: 0;
+		}
+	}
+
+	.latido::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background: inherit;
+		animation: latido 1.8s var(--ease-salida) infinite;
+	}
+
+	.scroll-fino {
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-borde-fuerte) transparent;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Visor (dialog nativo)                                               */
+/* ------------------------------------------------------------------ */
+
+dialog::backdrop {
+	background: rgb(3 4 6 / 0.78);
+	backdrop-filter: blur(8px);
+}
+
+dialog[open] {
+	animation: abrir-visor 450ms var(--ease-salida);
+}
+
+dialog[open]::backdrop {
+	animation: aparecer-fondo 450ms var(--ease-salida);
+}
+
+@keyframes abrir-visor {
+	from {
+		opacity: 0;
+		transform: translateY(16px) scale(0.97);
+	}
+}
+
+@keyframes aparecer-fondo {
+	from {
+		opacity: 0;
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* Movimiento reducido                                                 */
+/* ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+	.js .revelar-oculto {
+		opacity: 1;
+		transform: none;
+		filter: none;
+	}
+	.marquesina-pista {
+		animation: none;
+		width: auto;
+		justify-content: center;
+	}
+	.marquesina-pista > * {
+		flex-shrink: 1;
+		flex-wrap: wrap;
+		justify-content: center;
+		padding-inline: 1.5rem;
+	}
+	.marquesina-pista .copia {
+		display: none;
+	}
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+/* Sección fuera de pantalla: sus animaciones se congelan (lo alterna +layout.svelte). */
+.pausado,
+.pausado *,
+.pausado *::before,
+.pausado *::after {
+	animation-play-state: paused !important;
+}
+
+/* Miniaturas de flujos (cada una es un canvas de xyflow con cientos de nodos): fuera de
+   pantalla el navegador se salta su render. Su tamaño lo fija el contenedor con
+   `aspect-ratio`, así que no cambia el alto de la página. */
+.miniatura-flujo {
+	content-visibility: auto;
+}

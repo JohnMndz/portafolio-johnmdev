@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+	<head>
+		<link rel="icon" href="data:," />
+	</head>
+	<body style="margin: 0; background: #060709">
+		<script type="importmap">
+			{
+				"imports": {
+					"three": "./node_modules/three/build/three.module.js",
+					"three/addons/": "./node_modules/three/examples/jsm/"
+				}
+			}
+		</script>
+		<script type="module">
+			import * as THREE from 'three';
+			import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+			import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+			import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+			import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+			import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+
+			const q = new URLSearchParams(location.search);
+			const movil = q.get('modo') === 'movil';
+			const W = +q.get('w') || (movil ? 720 : 1280);
+			const H = movil ? Math.round((W * 16) / 9) : Math.round((W * 9) / 16);
+
+			const r = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+			r.setSize(W, H);
+			r.setPixelRatio(1);
+			r.toneMapping = THREE.ACESFilmicToneMapping;
+			r.toneMappingExposure = 1.3;
+			document.body.appendChild(r.domElement);
+
+			const FONDO = new THREE.Color('#060709');
+			const esc = new THREE.Scene();
+			esc.background = FONDO;
+			esc.fog = new THREE.Fog(FONDO, 9, 26);
+
+			// Entorno propio: sala oscura con paneles de luz lima, cian y blanco.
+			// Es lo que se refleja en el metal, así que controla el color de todo.
+			function entorno() {
+				const s = new THREE.Scene();
+				s.add(
+					new THREE.Mesh(
+						new THREE.BoxGeometry(20, 20, 20),
+						new THREE.MeshBasicMaterial({ color: '#050608', side: THREE.BackSide })
+					)
+				);
+				const panel = (color, int, pos, rot, w, h) => {
+					const m = new THREE.Mesh(
+						new THREE.PlaneGeometry(w, h),
+						new THREE.MeshBasicMaterial({
+							color: new THREE.Color(color).multiplyScalar(int),
+							side: THREE.DoubleSide
+						})
+					);
+					m.position.set(...pos);
+					m.rotation.set(...rot);
+					s.add(m);
+				};
+				panel('#c8f550', 4.2, [-7, 2, 3], [0, Math.PI / 2, 0], 3, 12);
+				panel('#4fe3d0', 3.4, [7, -1, -2], [0, -Math.PI / 2, 0], 3, 10);
+				panel('#ffffff', 2.6, [0, 8, 2], [Math.PI / 2, 0, 0], 10, 2);
+				panel('#9aa0ac', 0.6, [0, 0, 9.5], [0, Math.PI, 0], 16, 10);
+				panel('#ffffff', 0.8, [2, 1, 9], [0, Math.PI, 0], 6, 1.2);
+				panel('#8b7bff', 0.25, [0, -8, -3], [-Math.PI / 2, 0, 0], 8, 3);
+				return s;
+			}
+			const pm = new THREE.PMREMGenerator(r);
+			esc.environment = pm.fromScene(entorno(), 0.03).texture;
+
+			const grafito = new THREE.MeshPhysicalMaterial({
+				color: '#4b515a',
+				metalness: 1,
+				roughness: 0.22,
+				clearcoat: 1,
+				clearcoatRoughness: 0.06,
+				iridescence: 0.0,
+				iridescenceIOR: 1.3,
+				iridescenceThicknessRange: [120, 260]
+			});
+			const lima = new THREE.MeshStandardMaterial({
+				color: '#c8f550',
+				emissive: '#c8f550',
+				emissiveIntensity: 0.7,
+				roughness: 0.3
+			});
+			const cristal = new THREE.MeshPhysicalMaterial({
+				color: '#ffffff',
+				metalness: 0,
+				roughness: 0.05,
+				transmission: 1,
+				thickness: 0.6,
+				ior: 1.45,
+				attenuationColor: '#4fe3d0',
+				attenuationDistance: 1.2
+			});
+
+			const grupo = new THREE.Group();
+			esc.add(grupo);
+			const nudo = new THREE.Mesh(new THREE.TorusKnotGeometry(1, 0.32, 600, 96, 2, 3), grafito);
+			grupo.add(nudo);
+			const anillo = new THREE.Mesh(new THREE.TorusGeometry(1.95, 0.022, 24, 300), lima);
+			grupo.add(anillo);
+			const anillo2 = new THREE.Mesh(new THREE.TorusGeometry(2.35, 0.008, 16, 300), lima);
+			grupo.add(anillo2);
+
+			// Cubos: dispersos al principio, en órbita en medio, alineados sobre el anillo al final.
+			const N = 14,
+				cubos = [];
+			for (let i = 0; i < N; i++) {
+				const lado = 0.16 + (i % 4) * 0.05;
+				const c = new THREE.Mesh(
+					new RoundedBoxGeometry(lado, lado, lado, 4, lado * 0.22),
+					i % 4 === 0 ? lima : i % 3 === 0 ? cristal : grafito
+				);
+				const s = Math.sin(i * 12.9898) * 43758.5453;
+				const rnd = s - Math.floor(s);
+				c.userData = {
+					a: (i / N) * Math.PI * 2,
+					rad: 2.7 + rnd * 1.6,
+					y: (rnd - 0.5) * 2.6,
+					z: Math.cos(i * 7.1) * 2.5,
+					x: Math.sin(i * 3.3) * 4.5
+				};
+				grupo.add(c);
+				cubos.push(c);
+			}
+
+			// MSAA en el destino del composer: sin él, el posprocesado descarta el antialias
+			// del renderer y los anillos finos salen con dientes de sierra.
+			const comp = new EffectComposer(
+				r,
+				new THREE.WebGLRenderTarget(W, H, { type: THREE.HalfFloatType, samples: 4 })
+			);
+			comp.addPass(new RenderPass(esc, cam()));
+			function cam() {
+				return (
+					window.__cam ||
+					(window.__cam = new THREE.PerspectiveCamera(movil ? 44 : 30, W / H, 0.1, 100))
+				);
+			}
+			const camara = cam();
+			comp.addPass(new UnrealBloomPass(new THREE.Vector2(W, H), 0.42, 0.45, 0.9));
+			comp.addPass(new OutputPass());
+
+			const ss = (a, b, x) => {
+				const t = Math.min(Math.max((x - a) / (b - a), 0), 1);
+				return t * t * (3 - 2 * t);
+			};
+			const mix = (a, b, t) => a + (b - a) * t;
+			const v = (...p) => new THREE.Vector3(...p);
+
+			// Fotogramas clave de cámara [t, posición, objetivo]. El objeto está en el origen;
+			// mover el objetivo lo desplaza en pantalla (a la derecha en la portada, para el texto).
+			const CLAVES = movil
+				? [
+						[0.0, v(0, -0.4, 12.5), v(0, 2.2, 0)],
+						[0.3, v(2.5, 1.0, 8.0), v(0, 0.4, 0)],
+						[0.6, v(-1.4, -0.4, 4.4), v(0.4, 0, 0)],
+						[1.0, v(0, 0.2, 10.5), v(0, 0.0, 0)]
+					]
+				: [
+						[0.0, v(0.6, 0.4, 10.5), v(-2.3, 0, 0)],
+						[0.3, v(3.6, 1.6, 8.2), v(-1.0, 0.2, 0)],
+						[0.6, v(-1.8, -0.6, 4.6), v(0.6, 0, 0)],
+						[1.0, v(0, 0.3, 11.0), v(0, 0, 0)]
+					];
+			function camaraEn(t) {
+				let i = 0;
+				while (i < CLAVES.length - 2 && t > CLAVES[i + 1][0]) i++;
+				const [ta, pa, oa] = CLAVES[i],
+					[tb, pb, ob] = CLAVES[i + 1];
+				const k = ss(ta, tb, t);
+				return [pa.clone().lerp(pb, k), oa.clone().lerp(ob, k)];
+			}
+
+			window.renderFrame = (t) => {
+				const e = t * Math.PI * 2;
+				nudo.rotation.set(0.4 + e * 0.45, e * 0.7, e * 0.18);
+				const ensamblar = ss(0.72, 0.98, t),
+					dispersar = 1 - ss(0.0, 0.35, t);
+				anillo.rotation.set(
+					mix(1.15, 0.28, ensamblar) + t * 0.6 * (1 - ensamblar),
+					t * 2.2 * (1 - ensamblar),
+					0
+				);
+				anillo2.rotation.set(mix(0.6, 0.18, ensamblar), -t * 1.6 * (1 - ensamblar) + 0.4, 0.3);
+				cubos.forEach((c, i) => {
+					const u = c.userData;
+					const a = u.a + e * 0.5;
+					const orb = v(
+						Math.cos(a) * u.rad,
+						u.y + Math.sin(e * 1.5 + i) * 0.25,
+						Math.sin(a) * u.rad
+					);
+					const lejos = v(u.x, u.y * 1.6, u.z);
+					const af = u.a + e * 0.15;
+					const ring = v(Math.cos(af) * 1.95, Math.sin(af) * 1.95, 0);
+					const p = lejos.lerp(orb, 1 - dispersar).lerp(ring, ensamblar);
+					c.position.copy(p);
+					c.rotation.set(e * 1.2 + i, e * 1.5 + i * 0.7, i * 0.3);
+					c.scale.setScalar(mix(1, 0.7, ensamblar));
+				});
+				const [pos, obj] = camaraEn(t);
+				camara.position.copy(pos);
+				camara.lookAt(obj);
+				comp.render();
+				return r.domElement.toDataURL('image/png');
+			};
+			window.listo = true;
+		</script>
+	</body>
+</html>

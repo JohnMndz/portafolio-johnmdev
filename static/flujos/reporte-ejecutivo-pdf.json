@@ -1,0 +1,516 @@
+{
+  "nodes": [
+    {
+      "id": "7f6c6fb4-affe-46a2-a083-7a2b27dd15d7",
+      "name": "Probar Ahora (Manual)",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        16
+      ]
+    },
+    {
+      "id": "e91fb92c-de39-4827-ad44-21f1ca6ab5b5",
+      "name": "Obtener Destinatarios",
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        240,
+        112
+      ]
+    },
+    {
+      "id": "b20cca7b-c013-4ee7-a5e9-ed00f8320ad0",
+      "name": "Dia 1 a las 07:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -880,
+        208
+      ]
+    },
+    {
+      "id": "60a6d5cf-2c00-452b-8d17-16f2225cd20e",
+      "name": "Preparar Corrida",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        464,
+        112
+      ]
+    },
+    {
+      "id": "e032e721-2a6b-4f8d-80e8-2073e6945013",
+      "name": "Consultar API Producción",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        912,
+        16
+      ]
+    },
+    {
+      "id": "5a359e17-bb91-4ce1-80f9-068f697613b0",
+      "name": "Normalizar y Calcular Metricas",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        112
+      ]
+    },
+    {
+      "id": "7b4923c7-1abe-4980-b902-f81f5988a778",
+      "name": "Grafico Barras (QuickChart)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2032,
+        112
+      ]
+    },
+    {
+      "id": "402e53cb-73cd-403b-8712-970baeabda73",
+      "name": "Construir HTML del Reporte",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2256,
+        112
+      ]
+    },
+    {
+      "id": "4bfd9c63-a438-47bc-9314-44e1a3888e51",
+      "name": "Preparar index.html",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2480,
+        112
+      ]
+    },
+    {
+      "id": "9bb30296-a782-4171-a3df-636e6fc9cf8b",
+      "name": "Convertir a PDF (Gotenberg)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2704,
+        112
+      ]
+    },
+    {
+      "id": "37c2f055-47d5-444c-bb15-fa72a4aff1b0",
+      "name": "Construir Mensaje MIME",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2928,
+        112
+      ]
+    },
+    {
+      "id": "64ec6a72-ec7f-4443-8efa-dab4b9440bd5",
+      "name": "Enviar Correo a Directivos",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        3152,
+        112
+      ]
+    },
+    {
+      "id": "e4aec805-7c65-4130-ab17-4275d845c75c",
+      "name": "Capturar Cualquier Fallo",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        -880,
+        432
+      ]
+    },
+    {
+      "id": "fc01955a-e37c-4038-853b-462f5b737bf8",
+      "name": "Formatear Alerta de Fallo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -432,
+        432
+      ]
+    },
+    {
+      "id": "296b7668-b2f7-4881-940c-c46f78b7cb9d",
+      "name": "Avisarme del Fallo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -208,
+        432
+      ]
+    },
+    {
+      "id": "5cb85176-9354-4e17-a30b-0fc2b77cc209",
+      "name": "Definir Graficos",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1360,
+        112
+      ]
+    },
+    {
+      "id": "545e58d8-04eb-402a-b7de-419dc439660a",
+      "name": "Grafico Participacion (QuickChart)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1584,
+        112
+      ]
+    },
+    {
+      "id": "6e03a422-df19-4305-bae9-1a6732c7a3ed",
+      "name": "Guardar Participacion",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1808,
+        112
+      ]
+    },
+    {
+      "id": "532150a8-9055-4a11-91a9-24c9ef47a3be",
+      "name": "Config Alertas",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -656,
+        432
+      ]
+    },
+    {
+      "id": "394ec200-d281-47a6-92d8-44e088c18f41",
+      "name": "Config Pruebas",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        16,
+        112
+      ]
+    },
+    {
+      "id": "60ec567b-3b97-4578-a76e-142863d6144e",
+      "name": "Config Entrega",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -208,
+        112
+      ]
+    },
+    {
+      "id": "546b070c-1c8a-4be6-bd13-f6a8dc47b176",
+      "name": "Config Diseno",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -432,
+        112
+      ]
+    },
+    {
+      "id": "1d478996-2320-4bce-ad4e-4f9c290e8260",
+      "name": "Config Datos",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -656,
+        112
+      ]
+    },
+    {
+      "id": "e780e655-e91d-48dd-a1b1-f81bed1836bb",
+      "name": "Modo Produccion?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        688,
+        112
+      ]
+    },
+    {
+      "id": "e47bfce6-6118-480b-8f3d-1bf247656404",
+      "name": "Consultar API Desarrollo",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        912,
+        208
+      ]
+    }
+  ],
+  "connections": {
+    "Obtener Destinatarios": {
+      "main": [
+        [
+          {
+            "node": "Preparar Corrida",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar API Producción": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Calcular Metricas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar y Calcular Metricas": {
+      "main": [
+        [
+          {
+            "node": "Definir Graficos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Grafico Barras (QuickChart)": {
+      "main": [
+        [
+          {
+            "node": "Construir HTML del Reporte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construir HTML del Reporte": {
+      "main": [
+        [
+          {
+            "node": "Preparar index.html",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar index.html": {
+      "main": [
+        [
+          {
+            "node": "Convertir a PDF (Gotenberg)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir a PDF (Gotenberg)": {
+      "main": [
+        [
+          {
+            "node": "Construir Mensaje MIME",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construir Mensaje MIME": {
+      "main": [
+        [
+          {
+            "node": "Enviar Correo a Directivos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Capturar Cualquier Fallo": {
+      "main": [
+        [
+          {
+            "node": "Config Alertas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatear Alerta de Fallo": {
+      "main": [
+        [
+          {
+            "node": "Avisarme del Fallo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Definir Graficos": {
+      "main": [
+        [
+          {
+            "node": "Grafico Participacion (QuickChart)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Grafico Participacion (QuickChart)": {
+      "main": [
+        [
+          {
+            "node": "Guardar Participacion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Participacion": {
+      "main": [
+        [
+          {
+            "node": "Grafico Barras (QuickChart)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Alertas": {
+      "main": [
+        [
+          {
+            "node": "Formatear Alerta de Fallo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Pruebas": {
+      "main": [
+        [
+          {
+            "node": "Obtener Destinatarios",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Entrega": {
+      "main": [
+        [
+          {
+            "node": "Config Pruebas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Diseno": {
+      "main": [
+        [
+          {
+            "node": "Config Entrega",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Probar Ahora (Manual)": {
+      "main": [
+        [
+          {
+            "node": "Config Datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dia 1 a las 07:00": {
+      "main": [
+        [
+          {
+            "node": "Config Datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Config Datos": {
+      "main": [
+        [
+          {
+            "node": "Config Diseno",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Corrida": {
+      "main": [
+        [
+          {
+            "node": "Modo Produccion?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modo Produccion?": {
+      "main": [
+        [
+          {
+            "node": "Consultar API Producción",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Consultar API Desarrollo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Consultar API Desarrollo": {
+      "main": [
+        [
+          {
+            "node": "Normalizar y Calcular Metricas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

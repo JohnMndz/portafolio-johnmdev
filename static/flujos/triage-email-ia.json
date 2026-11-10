@@ -1,0 +1,509 @@
+{
+  "nodes": [
+    {
+      "id": "e190fbb0-4ac1-4147-af34-312df273246b",
+      "name": "Enviar a Google Chat",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -6064,
+        2672
+      ]
+    },
+    {
+      "id": "d769a6d3-d67c-41ec-b382-d0e2bfef76da",
+      "name": "Gmail Trigger Personal",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -9104,
+        2240
+      ]
+    },
+    {
+      "id": "45fd022e-96ec-4395-b1a0-fce3f632bac5",
+      "name": "Enviar Telegram Personal",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        -6064,
+        2352
+      ]
+    },
+    {
+      "id": "928383ed-d54c-4934-911c-2c3c788d16ad",
+      "name": "Gmail Trigger Corporativo",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -9104,
+        2432
+      ]
+    },
+    {
+      "id": "1187d9d4-e551-4794-89f9-3c558af70eec",
+      "name": "Obtener Mensaje Personal",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -8656,
+        2240
+      ]
+    },
+    {
+      "id": "7ac38ad4-6c10-47d5-b693-937773e1f721",
+      "name": "Obtener Mensaje Corporativo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -8656,
+        2432
+      ]
+    },
+    {
+      "id": "6c922ec3-6fa5-456c-a4ee-8574434611ad",
+      "name": "Clasificar Relevancia",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        -7312,
+        2336
+      ]
+    },
+    {
+      "id": "bfff8249-0ea4-4f21-a788-0dbdd5e7d1cc",
+      "name": "Construir Mensaje",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -6960,
+        2256
+      ]
+    },
+    {
+      "id": "6d21a5d8-0ed3-419d-8dfb-789f4a5f26db",
+      "name": "Marcar Leido Personal",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -6064,
+        2160
+      ]
+    },
+    {
+      "id": "53bd99fd-700c-4277-b410-b0d40b04b179",
+      "name": "Marcar Leido Corporativo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -5840,
+        2592
+      ]
+    },
+    {
+      "id": "c7049654-7681-46c7-af60-47d008f23442",
+      "name": "Ruta Cuenta",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -6512,
+        2320
+      ]
+    },
+    {
+      "id": "5d3006e1-72b9-42c8-90ad-421fdc597691",
+      "name": "Restaurar Contexto Marcar Leido",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -6736,
+        2336
+      ]
+    },
+    {
+      "id": "obtener-hilo-personal",
+      "name": "Obtener Hilo Personal",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -7984,
+        2240
+      ]
+    },
+    {
+      "id": "obtener-hilo-Corporativo",
+      "name": "Obtener Hilo Corporativo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        -7984,
+        2432
+      ]
+    },
+    {
+      "id": "9e3b6bbe-fe9e-403b-bd05-6ce86b8d577d",
+      "name": "OpenRouter Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -7232,
+        2624
+      ]
+    },
+    {
+      "id": "06c1ea7c-65d7-44df-a9b8-a2877165907d",
+      "name": "Contexto Unificado",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -8432,
+        2336
+      ]
+    },
+    {
+      "id": "6c6156ca-3946-4100-b63b-e7358ee14f08",
+      "name": "Ruta Hilo",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -8208,
+        2336
+      ]
+    },
+    {
+      "id": "7cc13f5c-b60e-4a09-8f35-ef16f3a526c8",
+      "name": "Ruta Accion Personal",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -6288,
+        2208
+      ]
+    },
+    {
+      "id": "20d626fb-dd4a-4e1e-9b9f-2cf4cf030761",
+      "name": "Ruta Accion Corporativo",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -6288,
+        2528
+      ]
+    },
+    {
+      "id": "29dc2fa9-8530-48bd-83e1-060d1e70d3c6",
+      "name": "Limitar Hilos Unificado",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -7760,
+        2336
+      ]
+    },
+    {
+      "id": "29da5bd4-b01e-4b46-8989-b80f974028cf",
+      "name": "Contexto IA Unificado",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -7536,
+        2336
+      ]
+    },
+    {
+      "id": "5b3cf5d6-923b-4612-b658-616f5ce8435f",
+      "name": "Forzar Mailbox Personal",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -8880,
+        2240
+      ]
+    },
+    {
+      "id": "8717ccb0-16dd-4f76-aecc-f9dc0587c310",
+      "name": "Forzar Mailbox Corporativo",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -8880,
+        2432
+      ]
+    }
+  ],
+  "connections": {
+    "Enviar a Google Chat": {
+      "main": [
+        [
+          {
+            "node": "Marcar Leido Corporativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger Personal": {
+      "main": [
+        [
+          {
+            "node": "Forzar Mailbox Personal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger Corporativo": {
+      "main": [
+        [
+          {
+            "node": "Forzar Mailbox Corporativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Mensaje Personal": {
+      "main": [
+        [
+          {
+            "node": "Contexto Unificado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Mensaje Corporativo": {
+      "main": [
+        [
+          {
+            "node": "Contexto Unificado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clasificar Relevancia": {
+      "main": [
+        [
+          {
+            "node": "Construir Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Restaurar Contexto Marcar Leido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Restaurar Contexto Marcar Leido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Construir Mensaje": {
+      "main": [
+        [
+          {
+            "node": "Restaurar Contexto Marcar Leido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ruta Cuenta": {
+      "main": [
+        [
+          {
+            "node": "Ruta Accion Personal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Ruta Accion Corporativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restaurar Contexto Marcar Leido": {
+      "main": [
+        [
+          {
+            "node": "Ruta Cuenta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Hilo Personal": {
+      "main": [
+        [
+          {
+            "node": "Limitar Hilos Unificado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Hilo Corporativo": {
+      "main": [
+        [
+          {
+            "node": "Limitar Hilos Unificado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Clasificar Relevancia",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contexto Unificado": {
+      "main": [
+        [
+          {
+            "node": "Ruta Hilo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ruta Hilo": {
+      "main": [
+        [
+          {
+            "node": "Obtener Hilo Personal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Obtener Hilo Corporativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ruta Accion Personal": {
+      "main": [
+        [
+          {
+            "node": "Enviar Telegram Personal",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Marcar Leido Personal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar Leido Personal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ruta Accion Corporativo": {
+      "main": [
+        [
+          {
+            "node": "Enviar a Google Chat",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Enviar Telegram Personal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Marcar Leido Corporativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limitar Hilos Unificado": {
+      "main": [
+        [
+          {
+            "node": "Contexto IA Unificado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Contexto IA Unificado": {
+      "main": [
+        [
+          {
+            "node": "Clasificar Relevancia",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Forzar Mailbox Personal": {
+      "main": [
+        [
+          {
+            "node": "Obtener Mensaje Personal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Forzar Mailbox Corporativo": {
+      "main": [
+        [
+          {
+            "node": "Obtener Mensaje Corporativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

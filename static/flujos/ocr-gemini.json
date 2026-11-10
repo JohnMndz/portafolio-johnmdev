@@ -1,0 +1,233 @@
+{
+  "nodes": [
+    {
+      "id": "8581a554-272e-4619-a91f-728682ee6557",
+      "name": "Cada 5m (11h a 13h)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -752,
+        32
+      ]
+    },
+    {
+      "id": "782a26f4-4beb-4a86-a1ab-a4284fdb4e12",
+      "name": "Gestor de Memoria (Flag)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -544,
+        32
+      ]
+    },
+    {
+      "id": "3ff5ce08-6c1d-453c-be1d-1c01cf051127",
+      "name": "¿Ya llegó el correo?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        -304,
+        32
+      ]
+    },
+    {
+      "id": "2f273eef-335a-4488-9673-d384dd428df3",
+      "name": "Buscar Correo (Mar-Vie)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -64,
+        -96
+      ]
+    },
+    {
+      "id": "b59a1258-269a-4e6b-b74d-9d5257312c47",
+      "name": "Buscar Correo Nuevo",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -64,
+        176
+      ]
+    },
+    {
+      "id": "b540d5c9-4ad2-45f5-8cce-c4f8cfed6321",
+      "name": "Paso Intermedio (Sin Marcar)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        -96
+      ]
+    },
+    {
+      "id": "bda1b325-7d32-4d24-bc02-42f3d9f9ebf7",
+      "name": "Marcar Flag = TRUE",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        176,
+        176
+      ]
+    },
+    {
+      "id": "2483ff7b-9ca8-4243-9c7a-9dec6ad2cb7f",
+      "name": "Analyze an image",
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        464,
+        48
+      ]
+    },
+    {
+      "id": "b11aa432-c4f1-47d1-9199-cba16b41835c",
+      "name": "Enviar a Google Chat",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1040,
+        48
+      ]
+    },
+    {
+      "id": "bbaeb304-9366-40b1-b8fe-a6f63ddda12c",
+      "name": "Seleccionar Menú del Día",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        48
+      ]
+    },
+    {
+      "id": "5398537d-466b-4855-b7bd-0a69776c68d4",
+      "name": "Marcar Día Enviado (Post-Éxito)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1264,
+        48
+      ]
+    }
+  ],
+  "connections": {
+    "Cada 5m (11h a 13h)": {
+      "main": [
+        [
+          {
+            "node": "Gestor de Memoria (Flag)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gestor de Memoria (Flag)": {
+      "main": [
+        [
+          {
+            "node": "¿Ya llegó el correo?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Ya llegó el correo?": {
+      "main": [
+        [
+          {
+            "node": "Buscar Correo (Mar-Vie)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Buscar Correo Nuevo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Correo (Mar-Vie)": {
+      "main": [
+        [
+          {
+            "node": "Paso Intermedio (Sin Marcar)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar Correo Nuevo": {
+      "main": [
+        [
+          {
+            "node": "Marcar Flag = TRUE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Paso Intermedio (Sin Marcar)": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Marcar Flag = TRUE": {
+      "main": [
+        [
+          {
+            "node": "Analyze an image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze an image": {
+      "main": [
+        [
+          {
+            "node": "Seleccionar Menú del Día",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enviar a Google Chat": {
+      "main": [
+        [
+          {
+            "node": "Marcar Día Enviado (Post-Éxito)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seleccionar Menú del Día": {
+      "main": [
+        [
+          {
+            "node": "Enviar a Google Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

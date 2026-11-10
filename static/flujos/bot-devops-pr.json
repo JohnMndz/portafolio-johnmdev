@@ -1,0 +1,383 @@
+{
+  "nodes": [
+    {
+      "id": "da98ee0f-9f0d-4353-a34e-bfc7dc74a871",
+      "name": "Webhook Google Chat",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -624,
+        272
+      ]
+    },
+    {
+      "id": "aa8cda10-30c5-4bbd-89f8-bc70c657b9a4",
+      "name": "Obtener Commits",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        -176,
+        272
+      ]
+    },
+    {
+      "id": "9dca05c9-ef20-4b03-88f4-2613a2467e84",
+      "name": "Generar Titulo y Descripcion",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        720,
+        272
+      ]
+    },
+    {
+      "id": "6a1194b7-4a9a-411a-a7cf-2a366a659931",
+      "name": "Formato PR",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        864,
+        496
+      ]
+    },
+    {
+      "id": "61b0a39d-66e4-45a4-b59b-aa5b14b4edb7",
+      "name": "Crear Pull Request",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1072,
+        272
+      ]
+    },
+    {
+      "id": "1f9067b7-a820-42e0-9ddd-e3315ecdad61",
+      "name": "Obtener Tareas Pendientes",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2192,
+        64
+      ]
+    },
+    {
+      "id": "b0db929a-bab5-4ad9-9713-ceb0cfdb37ca",
+      "name": "Filtrar Tarea Asignada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2416,
+        64
+      ]
+    },
+    {
+      "id": "b835c6a5-89b1-4831-b739-21400faf9065",
+      "name": "Responder en Google Chat",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        2640,
+        64
+      ]
+    },
+    {
+      "id": "d87fbe55-c54a-47bc-bac6-cd6171ec295f",
+      "name": "Notificar Error en Chat",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1520,
+        464
+      ]
+    },
+    {
+      "id": "a513bd9d-3174-4622-9855-48f8995dabb2",
+      "name": "OpenRouter Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        736,
+        496
+      ]
+    },
+    {
+      "id": "0205ee92-415c-4f22-8254-0f52fc95a13e",
+      "name": "Normalizar Entrada",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -400,
+        272
+      ]
+    },
+    {
+      "id": "79c87bcd-c750-4969-9a8c-380e058cef68",
+      "name": "Commits OK",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        48,
+        272
+      ]
+    },
+    {
+      "id": "4381247c-f4cf-4e40-804d-188cc17561a9",
+      "name": "Buscar PR Existente",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        272,
+        144
+      ]
+    },
+    {
+      "id": "867156f4-325e-4171-b1a2-54a23410846b",
+      "name": "PR Ya Existe",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        496,
+        144
+      ]
+    },
+    {
+      "id": "91619a32-6a1c-48cf-9918-e779b21653cc",
+      "name": "PR Creado",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1296,
+        272
+      ]
+    },
+    {
+      "id": "b315f8be-3a02-4ac7-8086-8873a0f0ee1a",
+      "name": "Merge PR",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1520,
+        64
+      ]
+    },
+    {
+      "id": "f7b23219-4366-417b-8e41-841229811e0f",
+      "name": "Agregar Label",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1744,
+        64
+      ]
+    },
+    {
+      "id": "258a74c0-fad1-4c87-a706-dc8f86359568",
+      "name": "Asignar Usuario",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        1968,
+        64
+      ]
+    }
+  ],
+  "connections": {
+    "Webhook Google Chat": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Entrada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Commits": {
+      "main": [
+        [
+          {
+            "node": "Commits OK",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generar Titulo y Descripcion": {
+      "main": [
+        [
+          {
+            "node": "Crear Pull Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formato PR": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generar Titulo y Descripcion",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Crear Pull Request": {
+      "main": [
+        [
+          {
+            "node": "PR Creado",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtener Tareas Pendientes": {
+      "main": [
+        [
+          {
+            "node": "Filtrar Tarea Asignada",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrar Tarea Asignada": {
+      "main": [
+        [
+          {
+            "node": "Responder en Google Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generar Titulo y Descripcion",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar Entrada": {
+      "main": [
+        [
+          {
+            "node": "Obtener Commits",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Commits OK": {
+      "main": [
+        [
+          {
+            "node": "Buscar PR Existente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notificar Error en Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Buscar PR Existente": {
+      "main": [
+        [
+          {
+            "node": "PR Ya Existe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR Ya Existe": {
+      "main": [
+        [
+          {
+            "node": "Merge PR",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generar Titulo y Descripcion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PR Creado": {
+      "main": [
+        [
+          {
+            "node": "Merge PR",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        [
+          {
+            "node": "Notificar Error en Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge PR": {
+      "main": [
+        [
+          {
+            "node": "Agregar Label",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agregar Label": {
+      "main": [
+        [
+          {
+            "node": "Asignar Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Asignar Usuario": {
+      "main": [
+        [
+          {
+            "node": "Obtener Tareas Pendientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

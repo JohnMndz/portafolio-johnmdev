@@ -1,0 +1,667 @@
+{
+  "nodes": [
+    {
+      "id": "93701934-0d85-4f67-97f5-48ed0cb6a8ed",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        46480,
+        512
+      ]
+    },
+    {
+      "id": "44a9fa8c-1c9a-4ccf-abab-4abe1f324707",
+      "name": "Normalizar Evento Telegram",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        46704,
+        512
+      ]
+    },
+    {
+      "id": "99eaa2eb-bed0-4c03-92c1-84670f608070",
+      "name": "Switch Por Tipo",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [
+        46928,
+        480
+      ]
+    },
+    {
+      "id": "b059e739-1fd2-45b3-bda0-c61c5ca6ec34",
+      "name": "Preparar Audio Telegram",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        47152,
+        368
+      ]
+    },
+    {
+      "id": "5a864e12-7814-4722-b6d2-0f872aad23e5",
+      "name": "Transcribir Audio Telegram",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        47376,
+        368
+      ]
+    },
+    {
+      "id": "d595b7aa-6661-4f06-b11b-7819c49c6f0d",
+      "name": "Merge Audio a Texto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        47600,
+        368
+      ]
+    },
+    {
+      "id": "a81b0375-ef6d-47bb-b021-7b1968c4797b",
+      "name": "Preparar Imagen Telegram",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        47376,
+        656
+      ]
+    },
+    {
+      "id": "67af5d19-4dc8-45d2-b96b-980772b7e1c0",
+      "name": "Merge Imagen a Texto",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        47600,
+        656
+      ]
+    },
+    {
+      "id": "b79ddcaf-d5bb-4cb3-ac2b-1e3b557c94e4",
+      "name": "Preparar Datos Mensaje",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        47824,
+        512
+      ]
+    },
+    {
+      "id": "0bfecdec-c38f-427f-8494-cea038824fff",
+      "name": "Leer Historial Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        48048,
+        512
+      ]
+    },
+    {
+      "id": "199e02fe-c98e-490e-9ecc-e1f638c12a33",
+      "name": "Validar Historial",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        48272,
+        512
+      ]
+    },
+    {
+      "id": "80615182-63d7-47c5-bf07-4abf1af13c44",
+      "name": "Ordenar Historial",
+      "type": "n8n-nodes-base.sort",
+      "typeVersion": 1,
+      "position": [
+        48496,
+        512
+      ]
+    },
+    {
+      "id": "fa062722-cfb4-46f3-9d63-b694ae1479c1",
+      "name": "Limitar Historial",
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        48720,
+        512
+      ]
+    },
+    {
+      "id": "fc83b766-fe9a-47ec-90d4-40b58b1552b9",
+      "name": "Construir Contexto Chat",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        48944,
+        512
+      ]
+    },
+    {
+      "id": "5106412d-afcb-4ad1-9518-4f9e01a8ef73",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        49680,
+        512
+      ]
+    },
+    {
+      "id": "597778fa-8e63-453a-a480-57815d008fc3",
+      "name": "leer_pagina_web",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        49296,
+        736
+      ]
+    },
+    {
+      "id": "e5b77346-1ee6-4d96-b86c-f61add5266c4",
+      "name": "obtener_evento_google_calendar",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        49424,
+        736
+      ]
+    },
+    {
+      "id": "b9ed73bc-306d-4aa5-917e-aa5c4691e34e",
+      "name": "crear_evento_google_calendar",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        49552,
+        736
+      ]
+    },
+    {
+      "id": "1323f84e-a8c2-4805-8594-db00de6b3e0c",
+      "name": "eliminar_evento_google_calendar",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        49680,
+        736
+      ]
+    },
+    {
+      "id": "91ffdd31-4546-4e7c-9c4c-a33429f886fb",
+      "name": "Guardar Respuesta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        50976,
+        512
+      ]
+    },
+    {
+      "id": "ea5ba4da-ae6d-414e-a864-b2f65f30f5fc",
+      "name": "Guardar Historial Usuario",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        51200,
+        512
+      ]
+    },
+    {
+      "id": "35cc111b-bb19-4c9f-bc41-b6051f084223",
+      "name": "Guardar Historial Asistente",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        51424,
+        512
+      ]
+    },
+    {
+      "id": "02e35bb2-2d64-4cf6-913b-69fdf6515dce",
+      "name": "Responder por Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        51648,
+        512
+      ]
+    },
+    {
+      "id": "4626c630-9756-479a-869d-84eb618afd04",
+      "name": "guardar_cita_supabase",
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        49808,
+        736
+      ]
+    },
+    {
+      "id": "10883e2d-fcc3-4d8b-9d73-5b4edb44e739",
+      "name": "cancelar_cita_supabase",
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        49936,
+        736
+      ]
+    },
+    {
+      "id": "1f0f14b2-b62d-4f3e-834a-b541be787c81",
+      "name": "obtener_cita_supabase",
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        50064,
+        736
+      ]
+    },
+    {
+      "id": "7f30ca4f-7451-47b4-94c0-f5a1c2115a1c",
+      "name": "OpenRouter Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        49168,
+        736
+      ]
+    },
+    {
+      "id": "b521b540-b4d6-49b5-988a-d9582479e97e",
+      "name": "Estructurar Salida Agente JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        50528,
+        512
+      ]
+    },
+    {
+      "id": "a720ec29-d445-45cc-a0fc-bf4ee0c80a1b",
+      "name": "Validar Evidencia Tools",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        50752,
+        512
+      ]
+    },
+    {
+      "id": "2bdf9c1d-ab53-445c-a828-aad4d5bb9e8e",
+      "name": "guardar_memoria",
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        50192,
+        736
+      ]
+    },
+    {
+      "id": "4ce4bc23-01ea-4eb5-b08c-5c3286c43cfe",
+      "name": "leer_memorias",
+      "type": "n8n-nodes-base.supabaseTool",
+      "typeVersion": 1,
+      "position": [
+        50320,
+        736
+      ]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Normalizar Evento Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalizar Evento Telegram": {
+      "main": [
+        [
+          {
+            "node": "Switch Por Tipo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Por Tipo": {
+      "main": [
+        [
+          {
+            "node": "Preparar Datos Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar Audio Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparar Imagen Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Audio Telegram": {
+      "main": [
+        [
+          {
+            "node": "Transcribir Audio Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribir Audio Telegram": {
+      "main": [
+        [
+          {
+            "node": "Merge Audio a Texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Audio a Texto": {
+      "main": [
+        [
+          {
+            "node": "Preparar Datos Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Imagen Telegram": {
+      "main": [
+        [
+          {
+            "node": "Merge Imagen a Texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Imagen a Texto": {
+      "main": [
+        [
+          {
+            "node": "Preparar Datos Mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar Datos Mensaje": {
+      "main": [
+        [
+          {
+            "node": "Leer Historial Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer Historial Supabase": {
+      "main": [
+        [
+          {
+            "node": "Validar Historial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Historial": {
+      "main": [
+        [
+          {
+            "node": "Ordenar Historial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ordenar Historial": {
+      "main": [
+        [
+          {
+            "node": "Limitar Historial",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limitar Historial": {
+      "main": [
+        [
+          {
+            "node": "Construir Contexto Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Construir Contexto Chat": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Estructurar Salida Agente JSON",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Estructurar Salida Agente JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "leer_pagina_web": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_evento_google_calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crear_evento_google_calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "eliminar_evento_google_calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Respuesta": {
+      "main": [
+        [
+          {
+            "node": "Guardar Historial Usuario",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Historial Usuario": {
+      "main": [
+        [
+          {
+            "node": "Guardar Historial Asistente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guardar Historial Asistente": {
+      "main": [
+        [
+          {
+            "node": "Responder por Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "guardar_cita_supabase": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "cancelar_cita_supabase": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "obtener_cita_supabase": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Estructurar Salida Agente JSON": {
+      "main": [
+        [
+          {
+            "node": "Validar Evidencia Tools",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validar Evidencia Tools": {
+      "main": [
+        [
+          {
+            "node": "Guardar Respuesta",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "guardar_memoria": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "leer_memorias": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
