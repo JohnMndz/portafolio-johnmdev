@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8" />
+		<title>og</title>
+		<style>
+			@font-face {
+				font-family: 'Geist';
+				src: url('../../node_modules/@fontsource-variable/geist/files/geist-latin-wght-normal.woff2')
+					format('woff2');
+				font-weight: 100 900;
+			}
+			@font-face {
+				font-family: 'Geist Mono';
+				src: url('../../node_modules/@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2')
+					format('woff2');
+				font-weight: 100 900;
+			}
+			@font-face {
+				font-family: 'Instrument Serif';
+				font-style: italic;
+				src: url('../../node_modules/@fontsource/instrument-serif/files/instrument-serif-latin-400-italic.woff2')
+					format('woff2');
+			}
+
+			:root {
+				--fondo: #060709;
+				--superficie: #0b0c0f;
+				--borde: #1d1f26;
+				--borde-fuerte: #2c2f38;
+				--tinta: #f4f5f7;
+				--tinta-suave: #9aa0ac;
+				--tinta-tenue: #5d6370;
+				--acento-300: #ddff85;
+				--acento-400: #c8f550;
+				--cian-400: #4fe3d0;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			html,
+			body {
+				width: 1200px;
+				height: 630px;
+				overflow: hidden;
+				background: var(--fondo);
+			}
+
+			.lienzo {
+				position: relative;
+				width: 1200px;
+				height: 630px;
+				overflow: hidden;
+				font-family: 'Geist', sans-serif;
+				color: var(--tinta);
+				background: var(--fondo);
+				-webkit-font-smoothing: antialiased;
+			}
+
+			.reticula {
+				position: absolute;
+				inset: 0;
+				background-image: radial-gradient(var(--borde-fuerte) 1px, transparent 1px);
+				background-size: 24px 24px;
+				opacity: 0.55;
+				-webkit-mask: radial-gradient(ellipse 75% 85% at 72% 45%, #000 20%, transparent 80%);
+			}
+
+			.halo {
+				position: absolute;
+				border-radius: 50%;
+				filter: blur(90px);
+			}
+			.halo.a {
+				width: 520px;
+				height: 420px;
+				right: 40px;
+				top: 90px;
+				background: color-mix(in oklab, var(--acento-400) 16%, transparent);
+			}
+			.halo.b {
+				width: 360px;
+				height: 300px;
+				left: -120px;
+				bottom: -160px;
+				background: color-mix(in oklab, var(--cian-400) 10%, transparent);
+			}
+
+			.contenido {
+				position: absolute;
+				left: 80px;
+				top: 78px;
+				width: 640px;
+			}
+
+			.pastilla {
+				display: inline-flex;
+				align-items: center;
+				gap: 12px;
+				padding: 9px 20px 9px 14px;
+				border: 1px solid var(--borde);
+				border-radius: 999px;
+				background: color-mix(in oklab, var(--superficie) 85%, transparent);
+				font-size: 19px;
+				color: var(--tinta-suave);
+			}
+			.punto {
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				background: var(--acento-400);
+				box-shadow: 0 0 0 5px color-mix(in oklab, var(--acento-400) 18%, transparent);
+			}
+
+			h1 {
+				margin-top: 34px;
+				font-size: 116px;
+				line-height: 0.92;
+				font-weight: 600;
+				letter-spacing: -0.055em;
+			}
+			h1 span.tinta {
+				display: block;
+				padding-bottom: 6px;
+				background: linear-gradient(180deg, #fff 0%, #fff 40%, var(--tinta-tenue) 140%);
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+			}
+			h1 .final {
+				color: var(--acento-400);
+			}
+
+			.subtitulo {
+				margin-top: 26px;
+				font-size: 31px;
+				line-height: 1.25;
+				letter-spacing: -0.02em;
+				color: var(--tinta-suave);
+			}
+			.serif {
+				font-family: 'Instrument Serif', serif;
+				font-style: italic;
+				font-size: 1.18em;
+				letter-spacing: -0.01em;
+				background: linear-gradient(
+					100deg,
+					var(--acento-300) 0%,
+					var(--acento-400) 35%,
+					var(--cian-400) 100%
+				);
+				-webkit-background-clip: text;
+				background-clip: text;
+				color: transparent;
+				padding-right: 1px;
+			}
+
+			.pie {
+				position: absolute;
+				left: 80px;
+				right: 80px;
+				bottom: 52px;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding-top: 26px;
+				border-top: 1px solid var(--borde);
+				font-family: 'Geist Mono', monospace;
+				font-size: 19px;
+				color: var(--tinta-tenue);
+			}
+			.pie .ubicacion {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+			.pie .dominio {
+				color: var(--acento-400);
+			}
+
+			/* Ventana del flujo */
+			.ventana {
+				position: absolute;
+				right: 64px;
+				top: 92px;
+				width: 380px;
+				border: 1px solid color-mix(in oklab, var(--borde-fuerte) 80%, transparent);
+				border-radius: 22px;
+				background: color-mix(in oklab, var(--superficie) 90%, transparent);
+				box-shadow:
+					inset 0 1px 0 0 rgb(255 255 255 / 0.06),
+					0 30px 60px rgb(0 0 0 / 0.5);
+				overflow: hidden;
+			}
+			.barra {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 13px 16px;
+				border-bottom: 1px solid var(--borde);
+				font-family: 'Geist Mono', monospace;
+				font-size: 12px;
+				color: var(--tinta-tenue);
+			}
+			.semaforo {
+				display: flex;
+				gap: 6px;
+			}
+			.semaforo i {
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				opacity: 0.8;
+			}
+			.activo {
+				display: inline-flex;
+				align-items: center;
+				gap: 6px;
+				padding: 3px 9px;
+				border-radius: 999px;
+				background: color-mix(in oklab, var(--acento-400) 10%, transparent);
+				color: var(--acento-300);
+				font-size: 11px;
+			}
+			.activo b {
+				width: 6px;
+				height: 6px;
+				border-radius: 50%;
+				background: var(--acento-400);
+			}
+			.ventana .reticula-v {
+				background-image: radial-gradient(var(--borde-fuerte) 1px, transparent 1px);
+				background-size: 20px 20px;
+			}
+			.ventana svg {
+				display: block;
+				width: 100%;
+				height: auto;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="lienzo">
+			<div class="halo a"></div>
+			<div class="halo b"></div>
+			<div class="reticula"></div>
+
+			<div class="contenido">
+				<span class="pastilla"><span class="punto"></span>Desarrollador de Software</span>
+				<h1>
+					<span class="tinta">John</span>
+					<span class="tinta" style="display: inline">Mendoza</span><span class="final">.</span>
+				</h1>
+				<p class="subtitulo">
+					Desarrollo <span class="serif">flujos con n8n</span>,<br />
+					interfaces web e infraestructura propia.
+				</p>
+			</div>
+
+			<div class="ventana">
+				<div class="barra">
+					<div class="semaforo">
+						<i style="background: #ff5f57"></i><i style="background: #febc2e"></i
+						><i style="background: #28c840"></i>
+					</div>
+					<span>rpa-bancario.json</span>
+					<span class="activo"><b></b>activo</span>
+				</div>
+				<div class="reticula-v">
+					<svg viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg">
+						<defs>
+							<linearGradient id="arista" x1="0" x2="1">
+								<stop offset="0" stop-color="#c8f550" />
+								<stop offset="1" stop-color="#4fe3d0" />
+							</linearGradient>
+							<radialGradient id="pulso">
+								<stop offset="0" stop-color="#fff" />
+								<stop offset="0.35" stop-color="#ddff85" />
+								<stop offset="1" stop-color="#c8f550" stop-opacity="0" />
+							</radialGradient>
+						</defs>
+						<g fill="none" stroke="#2c2f38" stroke-width="1.5" stroke-dasharray="4 5">
+							<path d="M138 286 C 138 240, 230 240, 230 200" />
+							<path d="M260 304 C 260 260, 260 240, 260 200" />
+							<path d="M382 286 C 382 240, 290 240, 290 200" />
+						</g>
+						<g fill="none" stroke="url(#arista)" stroke-width="2">
+							<path d="M146 158 C 166 158, 166 158, 186 158" />
+							<path d="M334 158 C 354 158, 354 158, 374 158" />
+						</g>
+						<circle cx="166" cy="158" r="8" fill="url(#pulso)" />
+						<circle cx="360" cy="158" r="8" fill="url(#pulso)" />
+
+						<g font-family="Geist" font-weight="500" fill="#f4f5f7">
+							<rect
+								x="14"
+								y="128"
+								width="132"
+								height="60"
+								rx="12"
+								fill="#0b0c0f"
+								stroke="#c8f550"
+								stroke-opacity="0.55"
+							/>
+							<text x="28" y="154" font-size="14">Workspace</text>
+							<text
+								x="28"
+								y="171"
+								font-family="Geist Mono"
+								font-size="9.5"
+								letter-spacing="0.8"
+								fill="#5d6370"
+							>
+								WEBHOOK GASTO
+							</text>
+
+							<rect
+								x="186"
+								y="116"
+								width="148"
+								height="84"
+								rx="12"
+								fill="#0b0c0f"
+								stroke="url(#arista)"
+								stroke-width="1.6"
+							/>
+							<rect
+								x="198"
+								y="130"
+								width="26"
+								height="26"
+								rx="7"
+								fill="#c8f550"
+								fill-opacity="0.14"
+							/>
+							<path
+								d="M211 135 l1.6 4.4 4.4 1.6 -4.4 1.6 -1.6 4.4 -1.6 -4.4 -4.4 -1.6 4.4 -1.6z"
+								fill="#ddff85"
+							/>
+							<text x="232" y="143" font-size="14">RPA Bancario</text>
+							<text
+								x="232"
+								y="159"
+								font-family="Geist Mono"
+								font-size="9.5"
+								letter-spacing="0.8"
+								fill="#5d6370"
+							>
+								N8N · ESTADO
+							</text>
+							<rect x="198" y="174" width="124" height="4" rx="2" fill="url(#arista)" />
+
+							<rect
+								x="374"
+								y="128"
+								width="132"
+								height="60"
+								rx="12"
+								fill="#0b0c0f"
+								stroke="#c8f550"
+								stroke-opacity="0.55"
+							/>
+							<text x="388" y="154" font-size="14">Google Sheets</text>
+							<text
+								x="388"
+								y="171"
+								font-family="Geist Mono"
+								font-size="9.5"
+								letter-spacing="0.8"
+								fill="#5d6370"
+							>
+								CONCILIACIÓN
+							</text>
+
+							<rect
+								x="84"
+								y="286"
+								width="108"
+								height="48"
+								rx="12"
+								fill="#0b0c0f"
+								stroke="#2c2f38"
+							/>
+							<text x="98" y="307" font-size="12">Gemini 3.5</text>
+							<text
+								x="98"
+								y="322"
+								font-family="Geist Mono"
+								font-size="9.5"
+								letter-spacing="0.8"
+								fill="#5d6370"
+							>
+								AGENTE IA
+							</text>
+
+							<rect
+								x="206"
+								y="304"
+								width="108"
+								height="48"
+								rx="12"
+								fill="#0b0c0f"
+								stroke="#2c2f38"
+							/>
+							<text x="220" y="325" font-size="12">Evolution API</text>
+							<text
+								x="220"
+								y="340"
+								font-family="Geist Mono"
+								font-size="9.5"
+								letter-spacing="0.8"
+								fill="#5d6370"
+							>
+								WHATSAPP
+							</text>
+
+							<rect
+								x="328"
+								y="286"
+								width="108"
+								height="48"
+								rx="12"
+								fill="#0b0c0f"
+								stroke="#2c2f38"
+							/>
+							<text x="342" y="307" font-size="12">Gmail API</text>
+							<text
+								x="342"
+								y="322"
+								font-family="Geist Mono"
+								font-size="9.5"
+								letter-spacing="0.8"
+								fill="#5d6370"
+							>
+								OTP REGEX
+							</text>
+						</g>
+					</svg>
+				</div>
+			</div>
+
+			<div class="pie">
+				<span class="ubicacion">
+					<svg
+						width="18"
+						height="18"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.8"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					>
+						<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" />
+						<circle cx="12" cy="9.5" r="2.5" />
+					</svg>
+					Guayaquil, Ecuador
+				</span>
+				<span>SvelteKit · Vue · n8n · IA</span>
+				<span class="dominio">johnmdev.daftcode.uk</span>
+			</div>
+		</div>
+	</body>
+</html>

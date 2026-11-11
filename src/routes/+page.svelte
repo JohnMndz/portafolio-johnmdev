@@ -37,12 +37,15 @@
 	<meta property="og:title" content={titulo} />
 	<meta property="og:description" content={descripcion} />
 	<meta property="og:url" content={SITIO_URL} />
-	<meta property="og:image" content="{SITIO_URL}/og.png" />
+	<meta property="og:image" content="{SITIO_URL}/og.png?v=2" />
+	<meta property="og:image:width" content="1200" />
+	<meta property="og:image:height" content="630" />
+	<meta property="og:image:alt" content={titulo} />
 
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:title" content={titulo} />
 	<meta name="twitter:description" content={descripcion} />
-	<meta name="twitter:image" content="{SITIO_URL}/og.png" />
+	<meta name="twitter:image" content="{SITIO_URL}/og.png?v=2" />
 
 	{@html `<script type="application/ld+json">${JSON.stringify(jsonLd)}</` + `script>`}
 </svelte:head>
