@@ -16,8 +16,8 @@ export const ENLACES: Enlace[] = [
 	},
 	{
 		etiqueta: 'WhatsApp',
-		valor: '+593 99 087 4003',
-		href: 'https://wa.me/593990874003',
+		valor: '+593 99 087 4004',
+		href: 'https://wa.me/593990874004',
 		icono: 'whatsapp',
 		externo: true
 	},
