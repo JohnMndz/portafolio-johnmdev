@@ -327,6 +327,7 @@
 		preload="none"
 		disablepictureinpicture
 	></video>
+	<div class="respiro"></div>
 	<div class="velo" bind:this={velo}></div>
 </div>
 
@@ -360,6 +361,60 @@
 	video.visible {
 		opacity: 1;
 	}
+
+	/* Respiro en reposo: un resplandor que se enciende y apaga despacio sobre el
+	   render. Solo anima `opacity` (compositor) y nada se desplaza, así que no hace
+	   titilar los anillos finos como lo hacía mover el vídeo. */
+	.respiro {
+		position: absolute;
+		inset: 0;
+		background:
+			radial-gradient(
+				ellipse 34% 42% at 72% 46%,
+				color-mix(in oklab, var(--color-acento-400) 22%, transparent),
+				transparent 70%
+			),
+			radial-gradient(
+				ellipse 26% 32% at 80% 58%,
+				color-mix(in oklab, var(--color-cian-400) 16%, transparent),
+				transparent 70%
+			);
+		opacity: 0.35;
+		will-change: opacity;
+		pointer-events: none;
+	}
+
+	@media (max-aspect-ratio: 1/1) {
+		.respiro {
+			background:
+				radial-gradient(
+					ellipse 60% 30% at 52% 68%,
+					color-mix(in oklab, var(--color-acento-400) 22%, transparent),
+					transparent 70%
+				),
+				radial-gradient(
+					ellipse 46% 22% at 60% 76%,
+					color-mix(in oklab, var(--color-cian-400) 16%, transparent),
+					transparent 70%
+				);
+		}
+	}
+
+	@media (prefers-reduced-motion: no-preference) {
+		.respiro {
+			animation: respirar 4.5s ease-in-out infinite alternate;
+		}
+	}
+
+	@keyframes respirar {
+		from {
+			opacity: 0.35;
+		}
+		to {
+			opacity: 1;
+		}
+	}
+
 	/* Legibilidad: lateral oscuro donde va el texto de la portada y velo general
 	   cuya opacidad crece con el scroll (la ajusta el script). */
 	.secuencia::after {
