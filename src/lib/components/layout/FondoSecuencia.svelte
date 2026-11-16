@@ -13,8 +13,8 @@
 	 */
 	const SECUENCIAS = {
 		// `total` es solo el valor inicial: al cargar se toma de la duración real del vídeo.
-		escritorio: { video: '/secuencia/escritorio.mp4', total: 480 },
-		movil: { video: '/secuencia/movil.mp4', total: 288 }
+		escritorio: { video: '/secuencia/escritorio-1080.mp4', total: 960 },
+		movil: { video: '/secuencia/movil-1080.mp4', total: 576 }
 	} as const;
 	type Modo = keyof typeof SECUENCIAS;
 
@@ -170,8 +170,9 @@
 			// Una búsqueda pendiente que se quedó sin `seeked` se reintenta desde aquí.
 			else if (pendiente >= 0) mostrar(pendiente);
 
-			// En reposo el bucle se detiene: el movimiento sin scroll es la deriva CSS
-			// (ver estilos), que no pide fotogramas al vídeo.
+			// En reposo el fondo queda quieto y el bucle se detiene. Cualquier movimiento
+			// lento (fotogramas del vídeo o `transform`) se veía a saltos o hacía
+			// titilar los anillos finos del render al caer entre píxeles.
 			if (llego && pendiente < 0) {
 				ultimoTiempo = 0;
 				return;
@@ -335,12 +336,12 @@
 	.secuencia {
 		position: absolute;
 		inset: 0;
-		background: var(--color-fondo) url('/secuencia/escritorio.webp') center / cover no-repeat;
+		background: var(--color-fondo) url('/secuencia/escritorio-1080.webp') center / cover no-repeat;
 	}
 
 	@media (max-aspect-ratio: 1/1) {
 		.secuencia {
-			background-image: url('/secuencia/movil.webp');
+			background-image: url('/secuencia/movil-1080.webp');
 		}
 	}
 
@@ -359,26 +360,6 @@
 	video.visible {
 		opacity: 1;
 	}
-
-	/* Deriva en reposo: un acercamiento y desplazamiento muy lentos para que el fondo
-	   no parezca una imagen fija. Va en `transform` (compositor), así que es fluida a
-	   cualquier velocidad; mover fotogramas del vídeo tan despacio se veía a saltos.
-	   Con movimiento reducido la anula la regla global de `layout.css`. */
-	@media (prefers-reduced-motion: no-preference) {
-		video {
-			animation: deriva 18s ease-in-out infinite alternate;
-		}
-	}
-
-	@keyframes deriva {
-		from {
-			transform: scale(1.03) translate3d(0, 0, 0);
-		}
-		to {
-			transform: scale(1.08) translate3d(-1.2%, -0.8%, 0);
-		}
-	}
-
 	/* Legibilidad: lateral oscuro donde va el texto de la portada y velo general
 	   cuya opacidad crece con el scroll (la ajusta el script). */
 	.secuencia::after {

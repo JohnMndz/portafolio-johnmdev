@@ -11,19 +11,19 @@ cp <repo>/scripts/secuencia/{escena.html,render.mjs} .
 
 # 1) PNG por fotograma al DOBLE del tamaño final (supermuestreo):
 #    <salida> <cantidad> <ancho> <escritorio|movil>
-node render.mjs ./png-d 480 3200 escritorio
-node render.mjs ./png-m 288 1620 movil
+node render.mjs ./png-d 960 3840 escritorio
+node render.mjs ./png-m 576 2160 movil
 
 # 2) Reducción con Lanczos y vídeo H.264 a 30 fps con un fotograma clave cada 4
 #    (-g 4): saltar a cualquier punto decodifica como mucho 4 fotogramas.
 FF=node_modules/ffmpeg-static/ffmpeg
 X264="-c:v libx264 -profile:v high -preset slow -crf 23 -g 4 -keyint_min 4 -sc_threshold 0 -bf 0 -movflags +faststart -an"
-$FF -y -framerate 30 -i png-d/f%04d.png -vf "scale=1600:900:flags=lanczos,format=yuv420p" $X264 <repo>/static/secuencia/escritorio.mp4
-$FF -y -framerate 30 -i png-m/f%04d.png -vf "scale=810:1440:flags=lanczos,format=yuv420p" $X264 <repo>/static/secuencia/movil.mp4
+$FF -y -framerate 30 -i png-d/f%04d.png -vf "scale=1920:1080:flags=lanczos,format=yuv420p" $X264 <repo>/static/secuencia/escritorio-1080.mp4
+$FF -y -framerate 30 -i png-m/f%04d.png -vf "scale=1080:1920:flags=lanczos,format=yuv420p" $X264 <repo>/static/secuencia/movil-1080.mp4
 
 # 3) Primer fotograma como imagen fija (se ve antes de que cargue el vídeo)
-$FF -y -i png-d/f0000.png -vf "scale=1600:900:flags=lanczos" -c:v libwebp -quality 64 <repo>/static/secuencia/escritorio.webp
-$FF -y -i png-m/f0000.png -vf "scale=810:1440:flags=lanczos" -c:v libwebp -quality 64 <repo>/static/secuencia/movil.webp
+$FF -y -i png-d/f0000.png -vf "scale=1920:1080:flags=lanczos" -c:v libwebp -quality 64 <repo>/static/secuencia/escritorio-1080.webp
+$FF -y -i png-m/f0000.png -vf "scale=1080:1920:flags=lanczos" -c:v libwebp -quality 64 <repo>/static/secuencia/movil-1080.webp
 ```
 
 ## Calidad de bordes
@@ -38,7 +38,7 @@ al doble para reducir después con Lanczos. No quites ninguna de las dos cosas.
 Con cientos de fotogramas (los necesarios para que el scroll no avance a saltos), una
 secuencia de WebP o bien ocupa gigas decodificada en memoria (~5,8 MB por fotograma de
 1600×900) o bien obliga a decodificar decenas de imágenes por segundo en CPU. El vídeo
-lo decodifica la GPU y pesa menos (480 fotogramas ≈ 9 MB a 1600×900).
+lo decodifica la GPU y pesa menos (960 fotogramas ≈ 11 MB a 1920×1080).
 
 ## Notas
 
