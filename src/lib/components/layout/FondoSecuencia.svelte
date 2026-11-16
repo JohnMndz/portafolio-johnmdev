@@ -18,7 +18,7 @@
 	} as const;
 	type Modo = keyof typeof SECUENCIAS;
 
-	/** Fotogramas por segundo con los que se codificó el vídeo (ver LEEME). */
+	/** Fotogramas por segundo con los que se codificó el vídeo (ver scripts/secuencia/README.md). */
 	const FPS = 30;
 	/**
 	 * Constante de tiempo del suavizado, en ms: más alto, más inercia. Con la rueda del
@@ -45,14 +45,22 @@
 	const VAIVEN_AMPLITUD = 0.05;
 	const VAIVEN_PERIODO_MS = 9000;
 
-	let video: HTMLVideoElement | undefined;
+	/*
+	 * Dos <video> apilados: `red` arranca al instante en streaming nativo (el MP4 lleva
+	 * `faststart`, con unos cientos de KB ya hay fotogramas) mientras el vídeo completo
+	 * se descarga en segundo plano. Cuando está en memoria, `memoria` toma el relevo en
+	 * el mismo fotograma y `red` se descarta: así no se espera a bajar varios MB para
+	 * animar, y después cada salto del scroll se resuelve sin tocar la red.
+	 */
+	let videoRed: HTMLVideoElement | undefined;
+	let videoMemoria: HTMLVideoElement | undefined;
 	let velo: HTMLDivElement | undefined;
+	let visible = $state<'red' | 'memoria' | null>(null);
 	let modo = $state<Modo>(
 		typeof window !== 'undefined' && window.matchMedia('(max-aspect-ratio: 1/1)').matches
 			? 'movil'
 			: 'escritorio'
 	);
-	let listo = $state(false);
 
 	// La orientación decide el corte; al girar el móvil se carga el vídeo adecuado.
 	$effect(() => {
@@ -64,9 +72,12 @@
 	});
 
 	$effect(() => {
-		if (!video) return;
+		if (!videoRed || !videoMemoria) return;
 		const capa = velo;
-		const nodo = video;
+		const red = videoRed;
+		const memoria = videoMemoria;
+		/** El vídeo que se está mostrando y al que se le piden los fotogramas. */
+		let nodo = red;
 		const { video: url } = SECUENCIAS[modo];
 		// Se corrige con la duración real al cargar: si no coincide con lo codificado,
 		// se piden tiempos más allá del final y el fondo se queda en el último cuadro.
@@ -134,7 +145,7 @@
 		}
 
 		function alBuscar() {
-			if (!listo) alCargar();
+			if (!visible) alCargar();
 			if (pendiente >= 0 && pendiente !== mostrado) mostrar(pendiente);
 		}
 
@@ -186,11 +197,11 @@
 			objetivo = actual = progreso() * (total - 1);
 			// Fuerza la decodificación del primer fotograma aunque `play()` haya sido
 			// bloqueado por las políticas de ahorro/autoplay de Chrome móvil.
-			if (!listo) mostrar(Math.round(objetivo));
+			if (!visible) mostrar(Math.round(objetivo));
 		}
 
 		function alCargar() {
-			listo = true;
+			if (!visible) visible = 'red';
 			// Arranca el bucle (y con él el vaivén) en cuanto hay fotogramas.
 			if (!fotograma) fotograma = requestAnimationFrame(animar);
 		}
@@ -199,19 +210,61 @@
 		window.addEventListener('scroll', alDesplazar, { passive: true });
 		const abortador = new AbortController();
 
-		function activarFuente(fuente: string) {
-			if (!vivo) return;
-			nodo.preload = 'auto';
-			nodo.muted = true;
-			nodo.src = fuente;
-			nodo.load();
+		function escuchar(v: HTMLVideoElement) {
+			v.addEventListener('seeked', alBuscar);
+			v.addEventListener('loadedmetadata', alMetadatos);
+			v.addEventListener('loadeddata', alCargar);
+		}
+
+		function soltar(v: HTMLVideoElement) {
+			v.removeEventListener('seeked', alBuscar);
+			v.removeEventListener('loadedmetadata', alMetadatos);
+			v.removeEventListener('loadeddata', alCargar);
+		}
+
+		function activarFuente(v: HTMLVideoElement, fuente: string) {
+			v.muted = true;
+			v.src = fuente;
+			v.load();
 			// Safari en iOS no pinta los fotogramas de un vídeo que nunca se
 			// reprodujo: arrancarlo y pararlo (está silenciado, se permite) lo
 			// desbloquea.
-			nodo
-				.play()
-				.then(() => nodo.pause())
+			v.play()
+				.then(() => v.pause())
 				.catch(() => {});
+		}
+
+		/**
+		 * Relevo al vídeo en memoria: se le pide el fotograma que se ve ahora y, cuando
+		 * lo tiene pintado, pasa a ser el visible y el de streaming se descarga.
+		 */
+		function relevar(fuente: string) {
+			let preparado = false;
+			const alListo = () => {
+				if (!vivo || memoria.readyState < 1) return;
+				if (!preparado) {
+					preparado = true;
+					const i = mostrado >= 0 ? mostrado : Math.round(actual);
+					memoria.currentTime = tiempo(i);
+					mostrado = i;
+					return;
+				}
+				// Primer `seeked`: ya tiene el fotograma, toma el relevo.
+				memoria.removeEventListener('loadedmetadata', alListo);
+				memoria.removeEventListener('seeked', alListo);
+				soltar(red);
+				nodo = memoria;
+				pendiente = -1;
+				escuchar(memoria);
+				visible = 'memoria';
+				red.removeAttribute('src');
+				red.load();
+				alCargar();
+			};
+			memoria.addEventListener('loadedmetadata', alListo);
+			memoria.addEventListener('seeked', alListo);
+			memoria.preload = 'auto';
+			activarFuente(memoria, fuente);
 		}
 
 		function descargar(reintentos = 1) {
@@ -221,17 +274,13 @@
 					if (!vivo) return;
 					if (blob.size === 0) return Promise.reject();
 					urlLocal = URL.createObjectURL(blob);
-					activarFuente(urlLocal);
+					relevar(urlLocal);
 				})
 				.catch(() => {
 					if (!vivo || abortador.signal.aborted) return;
-					if (reintentos > 0) {
-						setTimeout(() => descargar(reintentos - 1), 1200);
-					} else {
-						// Si falla la precarga en bloque (corte de red momentáneo), cae al
-						// cargador nativo del elemento <video> por peticiones parciales.
-						activarFuente(url);
-					}
+					// Si falla (corte de red momentáneo) se reintenta; si no, se queda el
+					// streaming, que ya está funcionando.
+					if (reintentos > 0) setTimeout(() => descargar(reintentos - 1), 1200);
 				});
 		}
 
@@ -239,36 +288,49 @@
 		if (animado) {
 			// Arranca donde está la página (recarga a media página) sin animar desde 0.
 			objetivo = actual = progreso() * (total - 1);
-			nodo.addEventListener('seeked', alBuscar);
-			nodo.addEventListener('loadedmetadata', alMetadatos);
-			nodo.addEventListener('loadeddata', alCargar);
-
-			// Se descarga entero antes de usarlo: así cada salto se resuelve en memoria y
-			// no con peticiones parciales a la red en mitad del scroll.
+			escuchar(red);
+			// Solo metadatos: lo justo para pintar ya, sin competir por ancho de banda con
+			// la descarga completa; los saltos del scroll piden por rangos lo que falte.
+			red.preload = 'metadata';
+			activarFuente(red, url);
 			descargar();
 		}
 
 		return () => {
 			vivo = false;
-			listo = false;
+			visible = null;
 			abortador.abort();
 			observador.disconnect();
 			window.removeEventListener('resize', medir);
 			window.removeEventListener('scroll', alDesplazar);
 			if (fotograma) cancelAnimationFrame(fotograma);
 			if (!animado) return;
-			nodo.removeEventListener('seeked', alBuscar);
-			nodo.removeEventListener('loadedmetadata', alMetadatos);
-			nodo.removeEventListener('loadeddata', alCargar);
-			nodo.removeAttribute('src');
-			nodo.load();
+			for (const v of [red, memoria]) {
+				soltar(v);
+				v.removeAttribute('src');
+				v.load();
+			}
 			if (urlLocal) URL.revokeObjectURL(urlLocal);
 		};
 	});
 </script>
 
 <div class="secuencia" aria-hidden="true">
-	<video bind:this={video} class:listo muted playsinline preload="none" disablepictureinpicture
+	<video
+		bind:this={videoRed}
+		class:visible={visible === 'red'}
+		muted
+		playsinline
+		preload="none"
+		disablepictureinpicture
+	></video>
+	<video
+		bind:this={videoMemoria}
+		class:visible={visible === 'memoria'}
+		muted
+		playsinline
+		preload="none"
+		disablepictureinpicture
 	></video>
 	<div class="velo" bind:this={velo}></div>
 </div>
@@ -300,7 +362,7 @@
 		pointer-events: none;
 	}
 
-	video.listo {
+	video.visible {
 		opacity: 1;
 	}
 

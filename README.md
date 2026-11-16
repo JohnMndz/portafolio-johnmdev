@@ -33,7 +33,7 @@ La configuración de SvelteKit vive inline en `vite.config.ts`; **no hay `svelte
 
 ## Capturas de los flujos de n8n
 
-Ver [static/flujos/LEEME.md](static/flujos/LEEME.md). Mientras falte una captura, la
+Ver [static/flujos/README.md](static/flujos/README.md). Mientras falte una captura, la
 tarjeta muestra un marcador con la retícula del canvas en vez de una imagen rota.
 
 ## Pendientes antes de publicar

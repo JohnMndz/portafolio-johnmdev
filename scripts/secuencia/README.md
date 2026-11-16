@@ -38,7 +38,7 @@ al doble para reducir después con Lanczos. No quites ninguna de las dos cosas.
 Con cientos de fotogramas (los necesarios para que el scroll no avance a saltos), una
 secuencia de WebP o bien ocupa gigas decodificada en memoria (~5,8 MB por fotograma de
 1600×900) o bien obliga a decodificar decenas de imágenes por segundo en CPU. El vídeo
-lo decodifica la GPU y pesa menos (480 fotogramas ≈ 5 MB).
+lo decodifica la GPU y pesa menos (480 fotogramas ≈ 9 MB a 1600×900).
 
 ## Notas
 
