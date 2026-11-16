@@ -102,9 +102,12 @@
 		window.addEventListener('resize', medir, { passive: true });
 
 		let velado = -1;
+		// Donde existen las animaciones ligadas al scroll el velo es CSS puro (ver estilos).
+		const veloCss = CSS.supports?.('animation-timeline: scroll(root block)') === true;
 		function atenuar() {
 			// El velo oscurece el fondo en cuanto se sale de la portada: el render es
 			// protagonista arriba y acompaña sin competir con el contenido después.
+			if (veloCss) return;
 			const p = Math.min(window.scrollY / alto, 1);
 			const valor = Math.round((0.05 + p * 0.33) * 200) / 200;
 			if (valor !== velado) {
@@ -391,5 +394,24 @@
 		opacity: 0.05;
 		/* Capa propia: cambiar su opacidad al hacer scroll solo recompone, no repinta. */
 		will-change: opacity;
+	}
+
+	/* Mismo recorrido que `atenuar()` (0.05 → 0.38 en la primera pantalla de scroll),
+	   pero lo resuelve el compositor sin JavaScript. */
+	@supports (animation-timeline: scroll()) {
+		.velo {
+			animation: velar linear both;
+			animation-timeline: scroll(root block);
+			animation-range: 0 100vh;
+		}
+	}
+
+	@keyframes velar {
+		from {
+			opacity: 0.05;
+		}
+		to {
+			opacity: 0.38;
+		}
 	}
 </style>
