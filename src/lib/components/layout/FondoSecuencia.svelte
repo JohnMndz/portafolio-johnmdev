@@ -37,13 +37,6 @@
 	 * perdida y se pide la siguiente: sin esto una búsqueda atascada congelaba el fondo.
 	 */
 	const BUSQUEDA_MAX_MS = 400;
-	/**
-	 * Vaivén en reposo: aunque no se haga scroll, el render oscila unos fotogramas
-	 * alrededor de la posición de la página para que no parezca una imagen fija.
-	 * Amplitud en fracción del vídeo y periodo de ida y vuelta en ms.
-	 */
-	const VAIVEN_AMPLITUD = 0.05;
-	const VAIVEN_PERIODO_MS = 9000;
 
 	/*
 	 * Dos <video> apilados: `red` arranca al instante en streaming nativo (el MP4 lleva
@@ -171,20 +164,18 @@
 			const llego = paso >= Math.abs(resto);
 			actual = llego ? objetivo : actual + Math.sign(resto) * paso;
 
-			// El vaivén va de 0 a +A arriba de la página y de -A a 0 abajo: así nunca se
-			// sale del vídeo y el desplazamiento es continuo a lo largo del scroll.
-			const ultimo = total - 1;
-			const amplitud = VAIVEN_AMPLITUD * ultimo;
-			const vaiven = (amplitud * (1 - Math.cos((2 * Math.PI * t) / VAIVEN_PERIODO_MS))) / 2;
-			const desfase = vaiven - amplitud * (actual / ultimo);
-			const i = Math.min(Math.max(Math.round(actual + desfase), 0), ultimo);
+			const i = Math.min(Math.max(Math.round(actual), 0), total - 1);
 
 			if (i !== mostrado && i !== pendiente) mostrar(i);
 			// Una búsqueda pendiente que se quedó sin `seeked` se reintenta desde aquí.
 			else if (pendiente >= 0) mostrar(pendiente);
 
-			// Bucle continuo por el vaivén; el navegador lo pausa solo en pestañas ocultas
-			// y únicamente busca en el vídeo cuando cambia el fotograma entero.
+			// En reposo el bucle se detiene: el movimiento sin scroll es la deriva CSS
+			// (ver estilos), que no pide fotogramas al vídeo.
+			if (llego && pendiente < 0) {
+				ultimoTiempo = 0;
+				return;
+			}
 			fotograma = requestAnimationFrame(animar);
 		}
 
@@ -205,7 +196,7 @@
 
 		function alCargar() {
 			if (!visible) visible = 'red';
-			// Arranca el bucle (y con él el vaivén) en cuanto hay fotogramas.
+			// Arranca el bucle en cuanto hay fotogramas.
 			if (!fotograma) fotograma = requestAnimationFrame(animar);
 		}
 
@@ -367,6 +358,25 @@
 
 	video.visible {
 		opacity: 1;
+	}
+
+	/* Deriva en reposo: un acercamiento y desplazamiento muy lentos para que el fondo
+	   no parezca una imagen fija. Va en `transform` (compositor), así que es fluida a
+	   cualquier velocidad; mover fotogramas del vídeo tan despacio se veía a saltos.
+	   Con movimiento reducido la anula la regla global de `layout.css`. */
+	@media (prefers-reduced-motion: no-preference) {
+		video {
+			animation: deriva 18s ease-in-out infinite alternate;
+		}
+	}
+
+	@keyframes deriva {
+		from {
+			transform: scale(1.03) translate3d(0, 0, 0);
+		}
+		to {
+			transform: scale(1.08) translate3d(-1.2%, -0.8%, 0);
+		}
 	}
 
 	/* Legibilidad: lateral oscuro donde va el texto de la portada y velo general
